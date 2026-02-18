@@ -13,7 +13,7 @@ import { useCartContext } from "../../contexts/CartContext";
 import { useAuth } from "../../AuthContext";
 import "./ProductDetail.css";
 
-const BASE_URL = "http://3.210.9.239:5000/api/products";
+const BASE_URL = "https://airstride0-3backend-11.onrender.com/api/products";
 
 const ProductDetail = () => {
   const { id } = useParams();
