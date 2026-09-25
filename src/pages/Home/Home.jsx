@@ -8,8 +8,8 @@ export default function Home() {
 
   // Local video files (will exist tomorrow)
   const videos = [
-    "/videos/vid1.mp4",
-    "/videos/vid2.mp4",
+    "/videos/FEEL Embrace.mp4",
+    "/videos/OAC.mp4",
     "/videos/vid3.mp4",
     "/videos/vid4.mp4", // slower
   ];
@@ -23,7 +23,8 @@ export default function Home() {
 
     const handleTimeUpdate = () => {
       console.log("Video currentTime:", video.currentTime);
-      if (video.duration - video.currentTime < 1.5) {
+
+      if ( video.duration && video.duration - video.currentTime < 1.5) {
         setShowOverlay(true);
       } else {
         setShowOverlay(false);
@@ -48,28 +49,23 @@ export default function Home() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-
     console.log("Switching video to index:", currentVideoIndex, videos[currentVideoIndex]);
     video.src = videos[currentVideoIndex];
+    video.load();
 
-    // Slow down the 4th video
-    if (currentVideoIndex === 3) {
-      video.playbackRate = 0.7;
-      console.log("Slowing down 4th video");
-    } else {
-      video.playbackRate = 1.0;
-    }
+    video.playbackRate = currentVideoIndex === 3 ? 0.7 : 1;
 
     video
       .play()
-      .then(() => console.log("Video playing"))
       .catch((err) => console.error("Video play error:", err));
-  }, [currentVideoIndex, videos]);
+  }, [currentVideoIndex]);
 
   return (
-    <div className="home-page">
+    <main className="home-page">
+
       {/* HERO VIDEO SECTION */}
       <section className="hero-section">
+
         <video
           ref={videoRef}
           className="hero-video"
@@ -78,75 +74,304 @@ export default function Home() {
           playsInline
         />
 
+        <div className="hero-overlay" />
+
         <div className={`brand-cover ${showOverlay ? "visible" : ""}`}>
-          <h1>AirStride</h1>
+          <span>AIRSTRIDE</span>
         </div>
 
-        <div className="hero-text">
-          <h1 className="title">AirStride</h1>
-          <p className="subtitle">Breathing technology built for runners.</p>
-          <button
-            className="explore-btn"
-            onClick={() => navigate("/products")}
-          >
-            Explore Products
-          </button>
-        </div>
-      </section>
+        <div className="hero-content">
 
-      {/* PARALLAX 1 */}
-      <section className="parallax parallax-one">
-        <div className="parallax-content fade-in">
-          <h2>Performance Meets Breathing Science</h2>
+          {/* added new text */}
+
+          <div className="hero-label">
+            <span className="pulse-dot" />
+            NEXT GENERATION PERFORMANCE
+          </div>
+
+          <h1>
+            BREATHE
+            <span>BEYOND</span>
+            LIMITS.
+          </h1>
+
           <p>
-            Developed with biomechanical research, AirStride enhances lung
-            efficiency using lightweight airflow engineering designed to adapt
-            to your natural movement patterns.
+            Breathing technology engineered for runners who
+            refuse to slow down.
           </p>
+
+          <div className="hero-actions">
+            <button
+              className="primary-btn"
+              onClick={() => navigate("/products")}
+            >
+              Explore Products
+              <span>&#8594;</span>
+            </button>
+
+            <button
+              className="text-btn"
+              onClick={() => navigate("/about")}
+            >
+              Discover AirStride
+            </button>
+          </div>
+
         </div>
+
+        <div className="hero-stats">
+
+          <div>
+            <strong>01</strong>
+            <span>BREATHING<br />TECHNOLOGY</span>
+          </div>
+
+          <div>
+            <strong>24/7</strong>
+            <span>PERFORMANCE<br />ENGINEERED</span>
+          </div>
+
+          <div>
+            <strong>∞</strong>
+            <span>KEEP<br />MOVING</span>
+          </div>
+
+        </div>
+
+        <div className="scroll-indicator">
+          <span>SCROLL TO EXPLORE</span>
+          <div className="scroll-line" />
+        </div>
+
       </section>
+
+
+      {/* INTRO PARALLAX */}
+      <section className="parallax parallax-one">
+
+        <div className="parallax-shade" />
+
+        <div className="parallax-content">
+
+          <span className="eyebrow">THE AIRSTRIDE DIFFERENCE</span>
+
+          <h2>
+            Performance
+            <br />
+            starts with
+            <em> every breath.</em>
+          </h2>
+
+          <p>
+            Developed around the relationship between movement,
+            airflow and endurance. AirStride technology is designed
+            to work with your body rather than against it.
+          </p>
+
+          <div className="line-accent" />
+
+        </div>
+
+        <div className="parallax-number">
+          01
+        </div>
+
+      </section>
+
 
       {/* FEATURES */}
       <section className="info-section">
-        <h2 className="section-title">Why Athletes Choose AirStride</h2>
-        <div className="info-grid">
-          <div className="info-card">
-            <h3>Advanced Airflow Control</h3>
-            <p>Optimized oxygen uptake and steady breathing during long runs.</p>
-          </div>
-          <div className="info-card">
-            <h3>Lightweight Comfort</h3>
-            <p>Designed with premium breathable materials that reduce fatigue.</p>
-          </div>
-          <div className="info-card">
-            <h3>Smart Endurance Support</h3>
-            <p>Backed by sports science to improve stamina and recovery time.</p>
-          </div>
+
+        <div className="section-heading">
+
+          <span className="eyebrow">ENGINEERED FOR MOTION</span>
+
+          <h2>
+            Built for the
+            <span> next mile.</span>
+          </h2>
+
+          <p>
+            Every detail has a purpose. Every component is designed
+            around the athlete.
+          </p>
+
         </div>
+
+        <div className="info-grid">
+
+          <article className="info-card">
+
+            <div className="card-number">01</div>
+
+            <div className="card-icon">
+              ◌
+            </div>
+
+            <h3>Advanced Airflow</h3>
+
+            <p>
+              Engineered airflow channels designed to support
+              controlled and consistent breathing during movement.
+            </p>
+
+            <span className="card-link">
+              AIRFLOW SYSTEM &#8594;
+            </span>
+
+          </article>
+
+
+          <article className="info-card featured-card">
+
+            <div className="card-number">02</div>
+
+            <div className="card-icon">
+              ◇
+            </div>
+
+            <h3>Ultra Lightweight</h3>
+
+            <p>
+              Lightweight materials designed to stay comfortable
+              while you focus on your performance.
+            </p>
+
+            <span className="card-link">
+              MATERIAL SCIENCE &#8594;
+            </span>
+
+          </article>
+
+
+          <article className="info-card">
+
+            <div className="card-number">03</div>
+
+            <div className="card-icon">
+              ∞
+            </div>
+
+            <h3>Endurance Support</h3>
+
+            <p>
+              Performance-focused engineering built around your
+              natural breathing rhythm and movement.
+            </p>
+
+            <span className="card-link">
+              PERFORMANCE &#8594;
+            </span>
+
+          </article>
+
+        </div>
+
       </section>
 
-      {/* PARALLAX 2 */}
+
+      {/* SECOND PARALLAX */}
       <section className="parallax parallax-two">
-        <div className="parallax-content fade-in delay">
-          <h2>Technology That Moves With You</h2>
+
+        <div className="parallax-shade" />
+
+        <div className="parallax-content right-content">
+
+          <span className="eyebrow">TECHNOLOGY IN MOTION</span>
+
+          <h2>
+            Your pace.
+            <br />
+            Your rhythm.
+            <br />
+            <em>Your advantage.</em>
+          </h2>
+
           <p>
-            Every stride activates micro-air channels that adapt to your pace,
-            temperature, and breathing rhythm.
+            AirStride technology is designed to move naturally
+            with you, adapting to the demands of every run.
           </p>
+
+          <button
+            className="outline-btn"
+            onClick={() => navigate("/products")}
+          >
+            View Technology
+            <span>&#8594;</span>
+          </button>
+
         </div>
+
+        <div className="parallax-number">
+          02
+        </div>
+
       </section>
+
+
+      {/* PERFORMANCE STRIP */}
+      <section className="performance-section">
+
+        <div className="performance-item">
+          <span>01</span>
+          <strong>MOVE</strong>
+          <p>Natural movement without distraction.</p>
+        </div>
+
+        <div className="performance-item">
+          <span>02</span>
+          <strong>BREATHE</strong>
+          <p>Designed around your breathing rhythm.</p>
+        </div>
+
+        <div className="performance-item">
+          <span>03</span>
+          <strong>PERFORM</strong>
+          <p>Technology built for the next mile.</p>
+        </div>
+
+      </section>
+
 
       {/* FINAL CTA */}
       <section className="final-section">
-        <h2>Ready to Upgrade Your Run?</h2>
-        <p>Experience the next generation of breathing performance gear.Learn More about who weare and what we stand for here at AirStride</p>
-        <button
-          className="cta-bottom"
-          onClick={() => navigate("/about")}
-        >
-          About Us
-        </button>
+
+        <div className="cta-glow" />
+
+        <span className="eyebrow">THE FUTURE OF PERFORMANCE</span>
+
+        <h2>
+          Ready to
+          <br />
+          <span>move differently?</span>
+        </h2>
+
+        <p>
+          Discover the technology behind AirStride and
+          find the equipment built for your journey.
+        </p>
+
+        <div className="final-actions">
+
+          <button
+            className="primary-btn"
+            onClick={() => navigate("/products")}
+          >
+            Explore Products
+            <span>&#8594;</span>
+          </button>
+
+          <button
+            className="outline-btn dark-btn"
+            onClick={() => navigate("/about")}
+          >
+            About AirStride
+          </button>
+
+        </div>
+
       </section>
-    </div>
+
+    </main>
   );
 }
