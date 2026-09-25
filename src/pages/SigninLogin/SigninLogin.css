@@ -97,7 +97,7 @@ html, body {
   border: 1px solid rgba(239, 68, 68, 0.4);
   color: #ef4444;
   padding: 14px;
-  border-radius: 6px;
+  /* border-radius: 6px; */
   margin-bottom: 25px;
   text-align: center;
   font-size: 14px;
@@ -169,7 +169,7 @@ html, body {
   background-color: #ff5a00;
   color: #ffffff;
   border: none;
-  border-radius: 8px;
+  /* border-radius: 8px; */
   font-size: 15px;
   font-weight: 700;
   text-transform: uppercase;
@@ -236,8 +236,8 @@ html, body {
 .social-button {
   width: 48px;
   height: 48px;
-  border: 1px solid #232733;
-  border-radius: 10px;
+  border: 1px solid #000000;
+  border-radius: 50px;
   background: #12141c;
   display: flex;
   align-items: center;
