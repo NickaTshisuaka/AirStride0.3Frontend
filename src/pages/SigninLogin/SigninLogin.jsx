@@ -258,10 +258,21 @@ const SigninLogin = () => {
       <ToastContainer position="top-center" />
 
       <div className="auth-container gradient-bg">
+        <div className='sports-video'>
+   <video 
+  src={`${window.location.origin}/videos/nike-innovations.mp4`} 
+  autoPlay 
+  loop 
+  controls 
+  mute
+  // width="150%" 
+  // height="100%"
+/>
+</div>
         <div className="auth-wrapper glass-card">
           <div className="auth-form-wrapper">
             <div className="auth-header">
-              <h2>{isLogin ? "Welcome Back 👋" : "Create Account 🚀"}</h2>
+              <h2>{isLogin ? "Welcome Back " : "Create Account "}</h2>
               <p>{isLogin ? "Sign in to your account" : "Sign up for a new account"}</p>
             </div>
 

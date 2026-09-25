@@ -1,151 +1,204 @@
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #0b0c10;
+  font-family: 'Futura', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow: hidden;
+  letter-spacing: -0.3px;
+}
+
 * {
   box-sizing: border-box;
 }
-
 .auth-container {
-  min-height: 100vh;
+  width: 100vw;
+  height: 100vh;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, #007bff, #ff7e00);
-  /* padding: 20px; */
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative;
+  flex-direction: row;
+  align-items: stretch;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
-/* Heartbeat background animation */
-.auth-bg {
+/* Left Hero Media Column */
+.sports-video {
+  width: 50%;
+  height: 100%;
+  position: relative;
+  background: #050608;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Shadow Layer over media content to add premium texture */
+.sports-video::after {
+  content: '';
   position: absolute;
   inset: 0;
-  z-index: 0;
+  background: linear-gradient(90deg, rgba(0,0,0,0) 70%, rgba(11,12,16,1) 100%);
   pointer-events: none;
-  opacity: 0.25; /* subtle effect */
 }
 
-/* wrapper with glass look */
-.auth-wrapper {
+.sports-video video {
   width: 100%;
-  max-width: 450px; /* centered narrow form */
+  height: 100%;
+  object-fit: cover;
+}
+
+.auth-wrapper {
+  width: 50%;
+  height: 100%;
+  background: #0b0c10; 
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  padding: 40px 30px;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.5s ease-out;
-  position: relative;
-  z-index: 1;
-  align-items: center;
   justify-content: center;
-  overflow: hidden;
+  align-items: center;
+  padding: 60px;
+  overflow-y: auto;
+  border-left: 1px solid #1f2229;
 }
 
-/* header */
+.auth-form-wrapper {
+  width: 100%;
+  max-width: 380px; 
+  display: flex;
+  flex-direction: column;
+}
+
 .auth-header {
   text-align: center;
-  margin-bottom: 25px;
+  margin-bottom: 40px;
 }
 
 .auth-header h2 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #2d3748;
+  font-size: 36px;
+  font-weight: 900;
+  text-transform: uppercase; 
+  letter-spacing: 0.5px;
+  color: #ffffff;
   margin: 0 0 8px 0;
 }
 
 .auth-header p {
-  color: #718096;
-  font-size: 16px;
+  color: #8f9cae;
+  font-size: 15px;
+  font-weight: 500;
   margin: 0;
 }
 
-/* form */
+.error-message {
+  background-color: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  padding: 14px;
+  border-radius: 6px;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 .auth-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: 25px;
 }
 
-.input-group {
+.name-row {
+  display: flex;
+  gap: 16px;
   width: 100%;
-  margin-bottom: 15px;
+}
+
+.name-row .auth-input {
+  flex: 1;
 }
 
 .auth-input {
   width: 100%;
-  padding: 14px 18px;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  font-size: 16px;
-  background-color: #f8fafc;
-  margin-top: 2%;
-  transition: all 0.3s ease;
+  padding: 16px 20px;
+  font-size: 15px;
+  font-weight: 500;
+  background-color: #12141c;
+  color: #ffffff;
+  border: 1px solid #232733; 
+  margin-bottom: 20px;
   outline: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .auth-input:focus {
-  border-color: #007bff;
-  background-color: white;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+  border-color: #ff5a00; 
+  background-color: #161922;
+  box-shadow: 0 0 0 3px rgba(255, 90, 0, 0.15);
 }
 
 .auth-input::placeholder {
-  color: #a0aec0;
+  color: #525c6c;  
 }
 
-/* forgot password */
 .forgot-password {
   align-self: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  margin-top: -5px;
 }
 
 .forgot-link {
-  color: #007bff;
+  color: #ff5a00;
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: color 0.3s ease;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
 }
 
 .forgot-link:hover {
-  color: #0056b3;
-  text-decoration: underline;
+  color: #ff7e33;
 }
 
-/* main button */
 .auth-button {
   width: 100%;
-  padding: 16px;
-  background: linear-gradient(90deg, #ff7e00, #007bff);
-  color: white;
+  padding: 18px;
+  background-color: #ff5a00;
+  color: #ffffff;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  outline: none;
-  margin-bottom: 20px;
+  transition: all 0.2s ease;
+  margin-bottom: 25px;
 }
 
 .auth-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 123, 255, 0.35);
+  background-color: #ff6c1a;
+  box-shadow: 0 8px 24px rgba(255, 90, 0, 0.3);
 }
 
 .auth-button:active {
-  transform: translateY(0);
+  transform: translateY(1px);
 }
 
-/* or divider */
+.auth-button:disabled {
+  background-color: #1f2229;
+  color: #4a505e;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+  
 .auth-divider {
   text-align: center;
   width: 100%;
-  margin: 20px 0;
+  margin: 30px 0;
   position: relative;
 }
 
@@ -156,136 +209,107 @@
   left: 0;
   width: 100%;
   height: 1px;
-  background: #e2e8f0;
+  background: #1f2229;
   z-index: 0;
 }
 
 .auth-divider span {
   position: relative;
   z-index: 1;
-  background: rgba(255,255,255,0.25);
-  color: #718096;
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 500;
+  background: #0b0c10;
+  color: #4a5568;
+  padding: 0 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-/* Social Login - icon only */
 .social-login {
   width: 100%;
   display: flex;
-  flex-wrap: wrap;
   gap: 12px;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 40px;
 }
 
 .social-button {
-  width: 45px;
-  height: 45px;
-  padding: 0;
-  border: 2px solid #e2e8f0;
-  border-radius: 50%;
-  background: white;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #232733;
+  border-radius: 10px;
+  background: #12141c;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .social-button i {
-  font-size: 20px;
-  color: #4a5568;
+  font-size: 18px;
+  color: #a0aec0;
 }
 
 .social-button:hover {
+  background: #ffffff;
+  border-color: #ffffff;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  background: linear-gradient(90deg, rgba(255,126,0,0.15), rgba(0,123,255,0.15)); /* subtle orange-blue gradient */
 }
 
-/* Specific social icon colors on hover (optional) */
-.social-button.google:hover i {
-  color: #4285F4;
+.social-button:hover i {
+  color: #0b0c10;
 }
 
-.social-button.github:hover i {
-  color: #333;
-}
-
-.social-button.facebook:hover i {
-  color: #3b5998;
-}
-
-.social-button.twitter:hover i {
-  color: #1da1f2;
-}
-
-.social-button.linkedin:hover i {
-  color: #0077b5;
-}
-
-.social-button.instagram:hover i {
-  color: #c13584;
-}
-
-.social-button.tiktok:hover i {
-  color: #000000;
-}
-
-
-/* footer toggle */
 .auth-footer {
   text-align: center;
-  padding-top: 10px;
+  color: #718096;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .toggle-button {
   background: none;
   border: none;
-  color: #007bff;
-  font-weight: 600;
+  color: #ff5a00;
+  font-weight: 700;
   cursor: pointer;
-  text-decoration: underline;
+  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.5px;
   padding: 0;
-  font-size: 15px;
-  transition: color 0.3s ease;
+  margin-left: 6px;
+  transition: color 0.2s ease;
 }
 
 .toggle-button:hover {
-  color: #0056b3;
+  color: #ff7e33;
+  text-decoration: underline;
 }
-
-/* responsive tweaks */
-@media (max-width: 480px) {
-  .auth-wrapper {
-    max-width: 90%;
-    padding: 30px 20px;
-  }
-
-  .auth-header h2 {
-    font-size: 24px;
-  }
-
-  .input-group {
-    margin-bottom: 12px;
-  }
-
-  .social-login {
+ 
+@media (max-width: 900px) {
+  .auth-container {
     flex-direction: column;
-    gap: 10px;
+    overflow-y: auto;
   }
-}
 
-.Toastify__toast {
-  border-radius: 10px;
-  font-family: "Poppins", sans-serif;
-  font-weight: 500;
-}
+  .sports-video {
+    width: 100%;
+    height: 35vh;
+  }
+  
+  .sports-video::after {
+    background: linear-gradient(180deg, rgba(0,0,0,0) 60%, rgba(11,12,16,1) 100%);
+  }
 
-.Toastify__toast--success {
-  background: linear-gradient(135deg, #1e3799, #e67e22);
-  color: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  .auth-wrapper {
+    width: 100%;
+    height: auto;
+    padding: 45px 24px;
+    border-left: none;
+  }
+  
+  .auth-header h2 {
+    font-size: 28px;
+  }
 }

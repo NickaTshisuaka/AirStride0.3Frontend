@@ -121,7 +121,7 @@ function App() {
             <div className="App">
               <AppContent />
             </div>
-            <Footer />
+            {/* <Footer /> */}
                 </GlobalProvider>
           </ThemeProvider>
         </CartProvider>
