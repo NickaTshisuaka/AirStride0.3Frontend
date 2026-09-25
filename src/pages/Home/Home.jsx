@@ -97,7 +97,7 @@ export default function Home() {
 
           <p>
             Breathing technology engineered for runners who
-            refuse to slow down.
+            refuse to slow down,
           </p>
 
           <div className="hero-actions">
