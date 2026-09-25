@@ -1,44 +1,122 @@
-/* Intro animation overlay */
-.intro-screen {
-  position: fixed;
-  inset: 0;
-  background: linear-gradient(180deg, #9fcfee, #538fb9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
-  transition: opacity 1s ease;
-  /* overflow-y: hidden; */
-}
+/* ================================
+   GLOBAL THEME
+================================ */
 
-.intro-screen.fade-out {
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Light mode (default) */
 :root {
   --bg: #ffffff;
   --text: #111111;
   --card: #f8f8f8;
+  --border: #e5e7eb;
+  --input-bg: #ffffff;
+  --input-text: #111111;
+  --muted-text: #666666;
   --accent: #f7931e;
+  --shadow: rgba(0, 0, 0, 0.08);
 }
 
-/* Dark mode */
 [data-theme="dark"] {
   --bg: #111111;
   --text: #f8f8f8;
   --card: #1e1e1e;
+  --border: #333333;
+  --input-bg: #252525;
+  --input-text: #ffffff;
+  --muted-text: #bdbdbd;
   --accent: #f7931e;
+  --shadow: rgba(0, 0, 0, 0.4);
 }
 
-/* Now everywhere in your site */
-body {
-  background: var(--bg);
+/* Entire application */
+html,
+body,
+#root {
+  min-height: 100%;
+  background-color: var(--bg);
   color: var(--text);
 }
 
-.card {
-  background: var(--card);
+body {
+  margin: 0;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
+/* Main containers */
+main,
+section,
+article,
+.page,
+.container {
+  color: var(--text);
+}
+
+/* Cards */
+.card {
+  background-color: var(--card);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+/* Forms */
+input,
+textarea,
+select {
+  background-color: var(--input-bg);
+  color: var(--input-text);
+  border-color: var(--border);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--muted-text);
+}
+
+/* Links */
+a {
+  color: inherit;
+}
+
+/* Smooth theme transition */
+* {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+/* ================================
+   GLOBAL DARK MODE OVERRIDES
+================================ */
+
+[data-theme="dark"] body {
+  background: #111111 !important;
+  color: #f8f8f8 !important;
+}
+
+[data-theme="dark"] main,
+[data-theme="dark"] section,
+[data-theme="dark"] article,
+[data-theme="dark"] .page,
+[data-theme="dark"] .container {
+  color: #f8f8f8;
+}
+
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: #252525 !important;
+  color: #ffffff !important;
+  border-color: #444444 !important;
+}
+
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: #aaaaaa !important;
+}
+
+[data-theme="dark"] .card {
+  background: #1e1e1e !important;
+  color: #f8f8f8 !important;
+  border-color: #333333 !important;
+}
