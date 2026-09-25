@@ -46,19 +46,34 @@ export default function Home() {
     };
   }, [currentVideoIndex, videos.length]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-    console.log("Switching video to index:", currentVideoIndex, videos[currentVideoIndex]);
-    video.src = videos[currentVideoIndex];
-    video.load();
+  const parallaxRefs = useRef([]);
 
-    video.playbackRate = currentVideoIndex === 3 ? 0.7 : 1;
+useEffect(() => {
+  const handleScroll = () => {
+    parallaxRefs.current.forEach((section) => {
+      if (!section) return;
 
-    video
-      .play()
-      .catch((err) => console.error("Video play error:", err));
-  }, [currentVideoIndex]);
+      const rect = section.getBoundingClientRect();
+
+      const offset = rect.top * 0.18;
+
+      section.style.setProperty(
+        "--parallax-offset",
+        `${offset}px`
+      );
+    });
+  };
+
+  window.addEventListener("scroll", handleScroll, {
+    passive: true,
+  });
+
+  handleScroll();
+
+  return () => {
+    window.removeEventListener("scroll", handleScroll);
+  };
+}, []);
 
   return (
     <main className="home-page">
@@ -147,7 +162,7 @@ export default function Home() {
 
 
       {/* INTRO PARALLAX */}
-      <section className="parallax parallax-one">
+      <section ref={(el) => (parallaxRefs.current[0] = el)} className="parallax parallax-one">
 
         <div className="parallax-shade" />
 
@@ -271,7 +286,7 @@ export default function Home() {
 
 
       {/* SECOND PARALLAX */}
-      <section className="parallax parallax-two">
+      <section ref={(el) => (parallaxRefs.current[1] = el)} className="parallax parallax-two">
 
         <div className="parallax-shade" />
 

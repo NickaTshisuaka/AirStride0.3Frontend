@@ -260,9 +260,13 @@
   position: relative;
   height: 90vh;
   min-height: 650px;
+
   background-size: cover;
-  background-position: center;
+  background-position: center center;
+  background-repeat: no-repeat;
+
   background-attachment: fixed;
+
   overflow: hidden;
 }
 
@@ -277,19 +281,24 @@
 .parallax-shade {
   position: absolute;
   inset: 0;
+
   background:
     linear-gradient(
       90deg,
       rgba(2, 10, 17, 0.9),
       rgba(2, 10, 17, 0.3)
     );
+
+  z-index: 1;
 }
 
 .parallax-content {
   position: absolute;
   z-index: 2;
+
   left: 8%;
   bottom: 14%;
+
   max-width: 600px;
 }
 
@@ -300,6 +309,7 @@
 
 .parallax-content h2 {
   margin: 20px 0;
+
   font-family: "Space Grotesk", sans-serif;
   font-size: clamp(3rem, 5vw, 5.5rem);
   line-height: 0.95;
@@ -313,7 +323,9 @@
 
 .parallax-content p {
   max-width: 520px;
+
   color: rgba(255, 255, 255, 0.7);
+
   font-size: 1rem;
   line-height: 1.8;
 }
@@ -322,17 +334,21 @@
   width: 100px;
   height: 2px;
   margin-top: 30px;
+
   background: #ff791f;
 }
 
 .parallax-number {
   position: absolute;
   z-index: 2;
+
   right: 7%;
   top: 10%;
+
   font-family: "Space Grotesk", sans-serif;
   font-size: 9rem;
   font-weight: 700;
+
   color: rgba(255, 255, 255, 0.08);
 }
 
