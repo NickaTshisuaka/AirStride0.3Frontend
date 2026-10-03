@@ -1,5 +1,6 @@
-// src/pages/AccountSettings/AccountSettings.jsx
-import React, { useEffect, useMemo, useState } from "react";
+// src/pages/Account/AccountSettings.jsx
+
+import React, { useEffect, useState } from "react";
 import {
   User,
   Lock,
@@ -10,53 +11,30 @@ import {
   Sun,
   Eye,
   EyeOff,
-  Check,
-  X,
   Save,
-  ShieldCheck,
 } from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
-import Confetti from "react-confetti";
-import {
-  EmailAuthProvider,
-  reauthenticateWithCredential,
-  updatePassword,
-} from "firebase/auth";
-import { auth } from "../../config/firebase";
 import { useTheme } from "../../contexts/ThemeContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./AccountSettings.css";
 
-const API_URL = (
-  import.meta.env.VITE_API_URL || "http://localhost:5000"
-).replace(/\/$/, "");
-
-const DEFAULT_NOTIFICATIONS = {
-  email: true,
-  inApp: true,
-  push: false,
-};
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 const AccountSettings = () => {
-  const {
-    theme,
-    toggleTheme,
-    accentColor,
-    setAccentColor,
-  } = useTheme();
-
-  const storedEmail = localStorage.getItem("email") || "";
+  const { theme, toggleTheme, accentColor, setAccentColor } = useTheme();
 
   const [user, setUser] = useState({
     firstName: localStorage.getItem("firstName") || "",
     lastName: localStorage.getItem("lastName") || "",
-    email: storedEmail,
+    email: localStorage.getItem("email") || "",
     phone: localStorage.getItem("phone") || "",
     address: localStorage.getItem("address") || "",
     profileImg: localStorage.getItem("profileImg") || "",
   });
 
   const [loading, setLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
   const [tab, setTab] = useState("profile");
 
   const [currentPassword, setCurrentPassword] = useState("");
@@ -67,174 +45,47 @@ const AccountSettings = () => {
   const [showNew, setShowNew] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const [pwUpdating, setPwUpdating] = useState(false);
-  const [showConfetti, setShowConfetti] = useState(false);
+  const [notifications, setNotifications] = useState([]);
 
-  const [notifications, setNotifications] = useState(() => {
-    try {
-      return JSON.parse(
-        localStorage.getItem("airstrideNotifications") || "[]"
-      );
-    } catch {
-      return [];
-    }
+  const [notifPrefs, setNotifPrefs] = useState({
+    email: true,
+    inApp: true,
+    push: false,
   });
 
-  const [notifPrefs, setNotifPrefs] = useState(() => {
-    try {
-      return {
-        ...DEFAULT_NOTIFICATIONS,
-        ...JSON.parse(
-          localStorage.getItem("airstrideNotificationPrefs") || "{}"
-        ),
-      };
-    } catch {
-      return DEFAULT_NOTIFICATIONS;
-    }
-  });
-
-  const initials = useMemo(() => {
-    const first = user.firstName?.charAt(0) || "?";
-    const last = user.lastName?.charAt(0) || "";
-
-    return `${first}${last}`.toUpperCase();
-  }, [user.firstName, user.lastName]);
-
-  const passwordStrength = (password) => {
-    if (!password) {
-      return {
-        label: "",
-        color: "",
-        score: 0,
-      };
-    }
-
-    let score = 0;
-
-    if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-
-    if (score <= 1) {
-      return {
-        label: "Weak",
-        color: "weak",
-        score,
-      };
-    }
-
-    if (score === 2) {
-      return {
-        label: "Medium",
-        color: "medium",
-        score,
-      };
-    }
-
-    return {
-      label: "Strong",
-      color: "strong",
-      score,
-    };
-  };
-
-  const strength = passwordStrength(newPassword);
-
-  const triggerAlert = (type, message) => {
-    const messages = {
-      welcome: message || `Welcome back, ${user.firstName || "User"}!`,
-      profileSaved: message || "Profile saved successfully.",
-      passwordUpdated: message || "Password updated successfully.",
-      payment: message || "Payment successful.",
-    };
-
-    const notifMsg = messages[type] || message || "Notification";
-
-    if (type === "profileSaved" || type === "passwordUpdated") {
-      toast.success(notifMsg);
-    } else if (type === "payment") {
-      toast.success(notifMsg);
-
-      setShowConfetti(true);
-
-      setTimeout(() => {
-        setShowConfetti(false);
-      }, 5000);
-    } else {
-      toast.info(notifMsg);
-    }
-
-    if (notifPrefs.inApp) {
-      const newNotification = {
-        id: `${Date.now()}-${Math.random()}`,
-        type,
-        message: notifMsg,
-        read: false,
-        date: new Date().toISOString(),
-      };
-
-      setNotifications((prev) => {
-        const updated = [newNotification, ...prev].slice(0, 50);
-
-        localStorage.setItem(
-          "airstrideNotifications",
-          JSON.stringify(updated)
-        );
-
-        return updated;
-      });
-    }
-  };
-
-  useEffect(() => {
-    localStorage.setItem(
-      "airstrideNotificationPrefs",
-      JSON.stringify(notifPrefs)
-    );
-  }, [notifPrefs]);
+  /* ================================
+     FETCH PROFILE
+  ================================= */
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!storedEmail) {
+      const email = localStorage.getItem("email");
+
+      if (!email) {
+        toast.error("No logged-in user found.");
         return;
       }
 
       setLoading(true);
 
       try {
-        const res = await fetch(
-          `${API_URL}/api/users/email/${encodeURIComponent(storedEmail)}`
+        const response = await fetch(
+          `${API_URL}/users/email/${encodeURIComponent(email)}`
         );
 
-        if (!res.ok) {
-          throw new Error("Unable to load your profile.");
+        if (!response.ok) {
+          throw new Error("Failed to load profile");
         }
 
-        const data = await res.json();
+        const data = await response.json();
 
         const profile = {
-          firstName:
-            data.firstName ||
-            localStorage.getItem("firstName") ||
-            "",
-          lastName:
-            data.lastName ||
-            localStorage.getItem("lastName") ||
-            "",
-          email: data.email || storedEmail,
-          phone:
-            data.phone ||
-            localStorage.getItem("phone") ||
-            "",
-          address:
-            data.address ||
-            localStorage.getItem("address") ||
-            "",
-          profileImg:
-            data.profileImg ||
-            localStorage.getItem("profileImg") ||
-            "",
+          firstName: data.firstName || "",
+          lastName: data.lastName || "",
+          email: data.email || email,
+          phone: data.phone || "",
+          address: data.address || "",
+          profileImg: data.profileImg || "",
         };
 
         setUser(profile);
@@ -245,31 +96,36 @@ const AccountSettings = () => {
         localStorage.setItem("phone", profile.phone);
         localStorage.setItem("address", profile.address);
         localStorage.setItem("profileImg", profile.profileImg);
-
-        if (!sessionStorage.getItem("airstrideWelcomeShown")) {
-          toast.info(`Welcome back, ${profile.firstName || "User"}!`);
-          sessionStorage.setItem("airstrideWelcomeShown", "true");
-        }
       } catch (error) {
-        console.error("Profile fetch error:", error);
-        toast.error(error.message || "Unable to load your profile.");
+        console.error("Profile error:", error);
+        toast.error("Unable to load your profile.");
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [storedEmail]);
+  }, []);
 
-  const updateField = (field, value) => {
+  /* ================================
+     INPUT HANDLER
+  ================================= */
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
     setUser((prev) => ({
       ...prev,
-      [field]: value,
+      [name]: value,
     }));
   };
 
-  const uploadImg = (event) => {
-    const file = event.target.files?.[0];
+  /* ================================
+     PROFILE IMAGE
+  ================================= */
+
+  const uploadImg = (e) => {
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
@@ -279,241 +135,243 @@ const AccountSettings = () => {
     }
 
     if (file.size > 2 * 1024 * 1024) {
-      toast.error("Profile images must be smaller than 2MB.");
+      toast.error("Image must be smaller than 2MB.");
       return;
     }
 
     const reader = new FileReader();
 
-    reader.onload = (e) => {
-      const image = e.target?.result;
+    reader.onload = (event) => {
+      const image = event.target.result;
 
-      if (typeof image !== "string") return;
+      setUser((prev) => ({
+        ...prev,
+        profileImg: image,
+      }));
 
-      updateField("profileImg", image);
       localStorage.setItem("profileImg", image);
-
-      toast.success("Profile image updated.");
-    };
-
-    reader.onerror = () => {
-      toast.error("Unable to read the image.");
     };
 
     reader.readAsDataURL(file);
-
-    event.target.value = "";
   };
 
   const removeImg = () => {
-    updateField("profileImg", "");
+    setUser((prev) => ({
+      ...prev,
+      profileImg: "",
+    }));
+
     localStorage.removeItem("profileImg");
-    toast.info("Profile image removed.");
   };
 
-  const saveProfile = async (event) => {
-    event.preventDefault();
+  const getInitials = () => {
+    const first = user.firstName?.charAt(0) || "";
+    const last = user.lastName?.charAt(0) || "";
 
-    if (!user.firstName.trim()) {
-      toast.error("First name is required.");
+    return `${first}${last}`.toUpperCase() || "U";
+  };
+
+  /* ================================
+     SAVE PROFILE
+  ================================= */
+
+  const saveProfile = async (e) => {
+    e.preventDefault();
+
+    if (!user.email) {
+      toast.error("Email address is missing.");
       return;
     }
 
-    if (!user.lastName.trim()) {
-      toast.error("Last name is required.");
-      return;
-    }
-
-    if (!user.email.trim()) {
-      toast.error("No account email was found.");
+    if (!user.firstName.trim() || !user.lastName.trim()) {
+      toast.error("First name and last name are required.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const payload = {
-        firstName: user.firstName.trim(),
-        lastName: user.lastName.trim(),
-        phone: user.phone.trim(),
-        address: user.address.trim(),
-        profileImg: user.profileImg || "",
-      };
-
-      const res = await fetch(
-        `${API_URL}/api/users/email/${encodeURIComponent(user.email)}`,
+      const response = await fetch(
+        `${API_URL}/users/email/${encodeURIComponent(user.email)}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify({
+            firstName: user.firstName.trim(),
+            lastName: user.lastName.trim(),
+            phone: user.phone.trim(),
+            address: user.address.trim(),
+            profileImg: user.profileImg,
+          }),
         }
       );
 
-      let data = {};
+      const data = await response.json();
 
-      try {
-        data = await res.json();
-      } catch {
-        data = {};
-      }
-
-      if (!res.ok) {
+      if (!response.ok) {
         throw new Error(data.error || "Failed to save profile.");
       }
 
-      localStorage.setItem("firstName", payload.firstName);
-      localStorage.setItem("lastName", payload.lastName);
-      localStorage.setItem("phone", payload.phone);
-      localStorage.setItem("address", payload.address);
-      localStorage.setItem("profileImg", payload.profileImg);
+      localStorage.setItem("firstName", user.firstName);
+      localStorage.setItem("lastName", user.lastName);
+      localStorage.setItem("phone", user.phone);
+      localStorage.setItem("address", user.address);
+      localStorage.setItem("profileImg", user.profileImg || "");
 
-      setUser((prev) => ({
-        ...prev,
-        ...payload,
-      }));
-
-      triggerAlert("profileSaved");
+      toast.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Profile save error:", error);
-      toast.error(error.message || "Failed to save profile.");
+      console.error("Save profile error:", error);
+      toast.error(error.message || "Unable to save profile.");
     } finally {
       setLoading(false);
     }
   };
 
-  const changePassword = async (event) => {
-    event.preventDefault();
+  /* ================================
+     PASSWORD STRENGTH
+  ================================= */
 
-    if (!auth?.currentUser) {
-      toast.error(
-        "No Firebase account is currently signed in. Please sign in again."
-      );
-      return;
+  const getPasswordStrength = (password) => {
+    if (!password) {
+      return {
+        label: "",
+        level: 0,
+      };
     }
 
-    if (!currentPassword) {
-      toast.error("Enter your current password.");
-      return;
+    let score = 0;
+
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password)) score++;
+    if (/[a-z]/.test(password)) score++;
+    if (/[0-9]/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+
+    if (score <= 2) {
+      return {
+        label: "Weak",
+        level: 1,
+      };
     }
 
-    if (newPassword.length < 8) {
-      toast.error("New password must be at least 8 characters.");
+    if (score <= 4) {
+      return {
+        label: "Medium",
+        level: 2,
+      };
+    }
+
+    return {
+      label: "Strong",
+      level: 3,
+    };
+  };
+
+  /* ================================
+     CHANGE PASSWORD
+  ================================= */
+
+  const changePassword = async (e) => {
+    e.preventDefault();
+
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      toast.error("Please fill in all password fields.");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      toast.error("Passwords do not match.");
+      toast.error("New passwords do not match.");
       return;
     }
 
-    if (strength.label === "Weak") {
-      toast.error(
-        "Choose a stronger password using uppercase letters, numbers and symbols."
-      );
+    if (newPassword.length < 8) {
+      toast.error("New password must contain at least 8 characters.");
       return;
     }
 
-    if (currentPassword === newPassword) {
-      toast.error("Your new password must be different.");
+    if (newPassword === currentPassword) {
+      toast.error("New password must be different from your current password.");
       return;
     }
 
-    setPwUpdating(true);
+    const strength = getPasswordStrength(newPassword);
+
+    if (strength.level < 2) {
+      toast.error("Please choose a stronger password.");
+      return;
+    }
+
+    setPasswordLoading(true);
 
     try {
-      const firebaseUser = auth.currentUser;
+      const response = await fetch(
+        `${API_URL}/auth/change-password`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: user.email,
+            currentPassword,
+            newPassword,
+          }),
+        }
+      );
 
-      if (!firebaseUser.email) {
-        throw new Error("Your Firebase account has no email address.");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || data.message || "Failed to change password."
+        );
       }
-
-      const credential = EmailAuthProvider.credential(
-        firebaseUser.email,
-        currentPassword
-      );
-
-      await reauthenticateWithCredential(
-        firebaseUser,
-        credential
-      );
-
-      await updatePassword(firebaseUser, newPassword);
 
       setCurrentPassword("");
       setNewPassword("");
       setConfirmPassword("");
 
-      setShowCurrent(false);
-      setShowNew(false);
-      setShowConfirm(false);
-
-      triggerAlert("passwordUpdated");
+      toast.success("Password updated successfully!");
     } catch (error) {
-      console.error("Password update error:", error);
-
-      switch (error?.code) {
-        case "auth/invalid-credential":
-        case "auth/wrong-password":
-          toast.error("Current password is incorrect.");
-          break;
-
-        case "auth/weak-password":
-          toast.error("The new password is too weak.");
-          break;
-
-        case "auth/requires-recent-login":
-          toast.error(
-            "Please sign out and sign in again before changing your password."
-          );
-          break;
-
-        case "auth/too-many-requests":
-          toast.error(
-            "Too many attempts. Please wait and try again later."
-          );
-          break;
-
-        default:
-          toast.error(
-            error?.message || "Failed to update your password."
-          );
-      }
+      console.error("Password error:", error);
+      toast.error(error.message || "Unable to update password.");
     } finally {
-      setPwUpdating(false);
+      setPasswordLoading(false);
     }
   };
 
-  const markNotificationRead = (id) => {
-    setNotifications((prev) => {
-      const updated = prev.map((notification) =>
+  /* ================================
+     NOTIFICATIONS
+  ================================= */
+
+  const addNotification = (message) => {
+    if (!notifPrefs.inApp) return;
+
+    setNotifications((prev) => [
+      {
+        id: Date.now(),
+        message,
+        read: false,
+      },
+      ...prev,
+    ]);
+  };
+
+  const markAsRead = (id) => {
+    setNotifications((prev) =>
+      prev.map((notification) =>
         notification.id === id
-          ? {
-              ...notification,
-              read: true,
-            }
+          ? { ...notification, read: true }
           : notification
-      );
-
-      localStorage.setItem(
-        "airstrideNotifications",
-        JSON.stringify(updated)
-      );
-
-      return updated;
-    });
+      )
+    );
   };
 
-  const clearNotifications = () => {
-    setNotifications([]);
-    localStorage.removeItem("airstrideNotifications");
-    toast.info("Notifications cleared.");
-  };
-
-  const unreadCount = notifications.filter(
-    (notification) => !notification.read
-  ).length;
+  /* ================================
+     TABS
+  ================================= */
 
   const tabs = [
     {
@@ -528,560 +386,457 @@ const AccountSettings = () => {
     },
     {
       id: "alerts",
-      label: "Alerts",
+      label: "Notifications",
       icon: Bell,
-      badge: unreadCount,
     },
     {
       id: "theme",
-      label: "Theme",
+      label: "Appearance",
       icon: theme === "dark" ? Sun : Moon,
     },
   ];
 
-  const renderProfileTab = () => (
+  /* ================================
+     PROFILE TAB
+  ================================= */
+
+  const renderProfile = () => (
     <section className="account-card">
-      <div className="account-card-head">
+      <div className="card-heading">
         <div>
-          <span className="account-kicker">ACCOUNT</span>
-          <h1>Profile Information</h1>
-          <p>Manage your personal information and profile picture.</p>
+          <span className="eyebrow">ACCOUNT</span>
+          <h2>Profile Information</h2>
+          <p>Manage your personal information and profile.</p>
         </div>
+        <User size={24} />
       </div>
 
-      <div className="profile-box">
-        <div className="profile-pic">
+      <div className="profile-header">
+        <div className="profile-avatar">
           {user.profileImg ? (
-            <img
-              src={user.profileImg}
-              alt={`${user.firstName} profile`}
-              onError={(event) => {
-                event.currentTarget.style.display = "none";
-              }}
-            />
+            <img src={user.profileImg} alt="Profile" />
           ) : (
-            <span>{initials}</span>
+            <span>{getInitials()}</span>
           )}
         </div>
 
         <div className="profile-actions">
-          <div>
-            <strong>
-              {user.firstName || "Your"} {user.lastName}
-            </strong>
-            <span>{user.email || "No email available"}</span>
-          </div>
+          <label className="upload-btn">
+            <Upload size={16} />
+            Upload Photo
 
-          <div className="pic-btns">
-            <label className="account-btn account-btn-primary">
-              <Upload size={15} />
-              Upload
-              <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                hidden
-                onChange={uploadImg}
-              />
-            </label>
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={uploadImg}
+            />
+          </label>
 
-            {user.profileImg && (
-              <button
-                className="account-btn account-btn-danger"
-                type="button"
-                onClick={removeImg}
-              >
-                <Trash2 size={15} />
-                Remove
-              </button>
-            )}
-          </div>
+          {user.profileImg && (
+            <button
+              type="button"
+              className="remove-btn"
+              onClick={removeImg}
+            >
+              <Trash2 size={16} />
+              Remove
+            </button>
+          )}
+
+          <small>JPG, PNG or WEBP • Max 2MB</small>
         </div>
       </div>
 
-      <form className="account-form" onSubmit={saveProfile}>
-        <div className="account-row">
-          <div className="account-field">
+      <form onSubmit={saveProfile} className="account-form">
+        <div className="form-row">
+          <div className="form-field">
             <label>First Name</label>
             <input
-              type="text"
+              name="firstName"
               value={user.firstName}
-              onChange={(event) =>
-                updateField("firstName", event.target.value)
-              }
+              onChange={handleChange}
               placeholder="First name"
-              autoComplete="given-name"
+              required
             />
           </div>
 
-          <div className="account-field">
+          <div className="form-field">
             <label>Last Name</label>
             <input
-              type="text"
+              name="lastName"
               value={user.lastName}
-              onChange={(event) =>
-                updateField("lastName", event.target.value)
-              }
+              onChange={handleChange}
               placeholder="Last name"
-              autoComplete="family-name"
+              required
             />
           </div>
         </div>
 
-        <div className="account-row">
-          <div className="account-field">
+        <div className="form-row">
+          <div className="form-field">
             <label>Email Address</label>
             <input
-              type="email"
               value={user.email}
               readOnly
-              className="account-readonly"
-              autoComplete="email"
+              className="readonly-input"
             />
-            <small>Your account email cannot be changed here.</small>
+            <small>Email cannot be changed here.</small>
           </div>
 
-          <div className="account-field">
+          <div className="form-field">
             <label>Phone Number</label>
             <input
-              type="tel"
+              name="phone"
               value={user.phone}
-              onChange={(event) =>
-                updateField("phone", event.target.value)
-              }
-              placeholder="+27 ..."
-              autoComplete="tel"
+              onChange={handleChange}
+              placeholder="+27..."
             />
           </div>
         </div>
 
-        <div className="account-field">
+        <div className="form-field">
           <label>Address</label>
-          <input
-            type="text"
+          <textarea
+            name="address"
             value={user.address}
-            onChange={(event) =>
-              updateField("address", event.target.value)
-            }
-            placeholder="Your delivery address"
-            autoComplete="street-address"
+            onChange={handleChange}
+            placeholder="Enter your address"
+            rows="4"
           />
         </div>
 
-        <div className="account-form-footer">
-          <span className="account-save-info">
-            <ShieldCheck size={16} />
-            Your information is stored securely.
-          </span>
+        <button
+          type="submit"
+          className="primary-btn"
+          disabled={loading}
+        >
+          <Save size={17} />
 
-          <button
-            className="save-btn"
-            type="submit"
-            disabled={loading}
-          >
-            <Save size={16} />
-            {loading ? "Saving..." : "Save Changes"}
-          </button>
-        </div>
+          {loading ? "Saving..." : "Save Changes"}
+        </button>
       </form>
     </section>
   );
 
-  const renderPasswordTab = () => (
-    <section className="account-card">
-      <div className="account-card-head">
-        <div>
-          <span className="account-kicker">SECURITY</span>
-          <h1>Password Settings</h1>
-          <p>
-            Change your password and keep your AirStride account secure.
-          </p>
-        </div>
-      </div>
+  /* ================================
+     PASSWORD TAB
+  ================================= */
 
-      <div className="security-banner">
-        <ShieldCheck size={22} />
-        <div>
-          <strong>Password protection</strong>
-          <span>
-            You will need your current password before a new one can be
-            applied.
-          </span>
-        </div>
-      </div>
+  const renderPassword = () => {
+    const strength = getPasswordStrength(newPassword);
 
-      <form
-        className="account-form password-form"
-        onSubmit={changePassword}
-      >
-        <div className="account-field">
-          <label>Current Password</label>
-
-          <div className="password-wrap">
-            <input
-              type={showCurrent ? "text" : "password"}
-              value={currentPassword}
-              onChange={(event) =>
-                setCurrentPassword(event.target.value)
-              }
-              placeholder="Enter current password"
-              autoComplete="current-password"
-              required
-            />
-
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowCurrent((value) => !value)}
-              aria-label={
-                showCurrent
-                  ? "Hide current password"
-                  : "Show current password"
-              }
-            >
-              {showCurrent ? (
-                <EyeOff size={17} />
-              ) : (
-                <Eye size={17} />
-              )}
-            </button>
+    return (
+      <section className="account-card">
+        <div className="card-heading">
+          <div>
+            <span className="eyebrow">SECURITY</span>
+            <h2>Password Settings</h2>
+            <p>Change your account password securely.</p>
           </div>
+          <Lock size={24} />
         </div>
 
-        <div className="account-field">
-          <label>New Password</label>
+        <form
+          onSubmit={changePassword}
+          className="account-form"
+        >
+          <div className="form-field">
+            <label>Current Password</label>
 
-          <div className="password-wrap">
-            <input
-              type={showNew ? "text" : "password"}
-              value={newPassword}
-              onChange={(event) =>
-                setNewPassword(event.target.value)
-              }
-              placeholder="Create a strong password"
-              autoComplete="new-password"
-              required
-            />
+            <div className="password-wrapper">
+              <input
+                type={showCurrent ? "text" : "password"}
+                value={currentPassword}
+                onChange={(e) =>
+                  setCurrentPassword(e.target.value)
+                }
+                placeholder="Enter current password"
+                required
+              />
 
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowNew((value) => !value)}
-              aria-label={
-                showNew
-                  ? "Hide new password"
-                  : "Show new password"
-              }
-            >
-              {showNew ? (
-                <EyeOff size={17} />
-              ) : (
-                <Eye size={17} />
-              )}
-            </button>
+              <button
+                type="button"
+                onClick={() => setShowCurrent(!showCurrent)}
+              >
+                {showCurrent ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
+            </div>
           </div>
 
-          {newPassword && (
-            <div className="password-strength">
-              <div className="strength-track">
-                <div
-                  className={`strength-fill ${strength.color}`}
-                  style={{
-                    width:
-                      strength.score === 1
-                        ? "25%"
-                        : strength.score === 2
-                        ? "50%"
-                        : strength.score === 3
-                        ? "75%"
-                        : "100%",
-                  }}
-                />
+          <div className="form-field">
+            <label>New Password</label>
+
+            <div className="password-wrapper">
+              <input
+                type={showNew ? "text" : "password"}
+                value={newPassword}
+                onChange={(e) =>
+                  setNewPassword(e.target.value)
+                }
+                placeholder="Create a new password"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowNew(!showNew)}
+              >
+                {showNew ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
+            </div>
+
+            {newPassword && (
+              <div className="strength-container">
+                <div className="strength-bars">
+                  <span className={strength.level >= 1 ? "active" : ""} />
+                  <span className={strength.level >= 2 ? "active" : ""} />
+                  <span className={strength.level >= 3 ? "active" : ""} />
+                </div>
+
+                <span className={`strength-text strength-${strength.level}`}>
+                  {strength.label}
+                </span>
               </div>
+            )}
 
-              <span className={`strength-text ${strength.color}`}>
-                {strength.label}
-              </span>
-            </div>
-          )}
-        </div>
-
-        <div className="account-field">
-          <label>Confirm New Password</label>
-
-          <div className="password-wrap">
-            <input
-              type={showConfirm ? "text" : "password"}
-              value={confirmPassword}
-              onChange={(event) =>
-                setConfirmPassword(event.target.value)
-              }
-              placeholder="Repeat your new password"
-              autoComplete="new-password"
-              required
-            />
-
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowConfirm((value) => !value)}
-              aria-label={
-                showConfirm
-                  ? "Hide confirmation password"
-                  : "Show confirmation password"
-              }
-            >
-              {showConfirm ? (
-                <EyeOff size={17} />
-              ) : (
-                <Eye size={17} />
-              )}
-            </button>
+            <small>
+              Use at least 8 characters with uppercase letters,
+              numbers and symbols.
+            </small>
           </div>
 
-          {confirmPassword && (
-            <div
-              className={`password-match ${
-                newPassword === confirmPassword
-                  ? "match-ok"
-                  : "match-error"
-              }`}
-            >
-              {newPassword === confirmPassword ? (
-                <>
-                  <Check size={15} />
-                  Passwords match
-                </>
-              ) : (
-                <>
-                  <X size={15} />
-                  Passwords do not match
-                </>
-              )}
+          <div className="form-field">
+            <label>Confirm New Password</label>
+
+            <div className="password-wrapper">
+              <input
+                type={showConfirm ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) =>
+                  setConfirmPassword(e.target.value)
+                }
+                placeholder="Repeat your new password"
+                required
+              />
+
+              <button
+                type="button"
+                onClick={() =>
+                  setShowConfirm(!showConfirm)
+                }
+              >
+                {showConfirm ? (
+                  <EyeOff size={18} />
+                ) : (
+                  <Eye size={18} />
+                )}
+              </button>
             </div>
-          )}
-        </div>
 
-        <div className="account-form-footer">
-          <span className="account-save-info">
-            Use at least 8 characters with numbers and symbols.
-          </span>
+            {confirmPassword && (
+              <div
+                className={
+                  newPassword === confirmPassword
+                    ? "password-match"
+                    : "password-no-match"
+                }
+              >
+                {newPassword === confirmPassword
+                  ? "✓ Passwords match"
+                  : "✕ Passwords do not match"}
+              </div>
+            )}
+          </div>
 
           <button
-            className="save-btn"
             type="submit"
-            disabled={pwUpdating}
+            className="primary-btn"
+            disabled={passwordLoading}
           >
-            <Lock size={16} />
-            {pwUpdating ? "Updating..." : "Update Password"}
-          </button>
-        </div>
-      </form>
-    </section>
-  );
+            <Lock size={17} />
 
-  const renderAlertsTab = () => (
+            {passwordLoading
+              ? "Updating..."
+              : "Update Password"}
+          </button>
+        </form>
+      </section>
+    );
+  };
+
+  /* ================================
+     ALERTS TAB
+  ================================= */
+
+  const renderAlerts = () => (
     <section className="account-card">
-      <div className="account-card-head alert-head">
+      <div className="card-heading">
         <div>
-          <span className="account-kicker">ALERTS</span>
-          <h1>Notifications</h1>
-          <p>Control how AirStride keeps you updated.</p>
+          <span className="eyebrow">ALERTS</span>
+          <h2>Notifications</h2>
+          <p>Choose how you want to receive notifications.</p>
         </div>
 
-        {notifications.length > 0 && (
-          <button
-            className="clear-notifications"
-            onClick={clearNotifications}
-            type="button"
-          >
-            Clear all
-          </button>
-        )}
+        <Bell size={24} />
       </div>
 
-      <div className="notification-preferences">
-        <h3>Notification Preferences</h3>
+      <div className="notification-settings">
+        <div className="notification-option">
+          <div>
+            <strong>Email Notifications</strong>
+            <span>Receive important updates by email.</span>
+          </div>
 
-        <label className="notification-option">
-          <span>
-            <strong>Email</strong>
-            <small>Receive updates by email.</small>
-          </span>
-
-          <input
-            type="checkbox"
-            checked={notifPrefs.email}
-            onChange={() =>
-              setNotifPrefs((prev) => ({
-                ...prev,
-                email: !prev.email,
-              }))
-            }
-          />
-        </label>
-
-        <label className="notification-option">
-          <span>
-            <strong>In-App</strong>
-            <small>Show updates inside your account.</small>
-          </span>
-
-          <input
-            type="checkbox"
-            checked={notifPrefs.inApp}
-            onChange={() =>
-              setNotifPrefs((prev) => ({
-                ...prev,
-                inApp: !prev.inApp,
-              }))
-            }
-          />
-        </label>
-
-        <label className="notification-option">
-          <span>
-            <strong>Push</strong>
-            <small>Allow browser push notifications.</small>
-          </span>
-
-          <input
-            type="checkbox"
-            checked={notifPrefs.push}
-            onChange={() =>
-              setNotifPrefs((prev) => ({
-                ...prev,
-                push: !prev.push,
-              }))
-            }
-          />
-        </label>
-      </div>
-
-      <div className="notification-history">
-        <div className="notification-history-head">
-          <h3>Recent Activity</h3>
-
-          {unreadCount > 0 && (
-            <span className="notification-count">
-              {unreadCount} unread
-            </span>
-          )}
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={notifPrefs.email}
+              onChange={() =>
+                setNotifPrefs((prev) => ({
+                  ...prev,
+                  email: !prev.email,
+                }))
+              }
+            />
+            <span />
+          </label>
         </div>
+
+        <div className="notification-option">
+          <div>
+            <strong>In-App Notifications</strong>
+            <span>Show alerts inside your account.</span>
+          </div>
+
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={notifPrefs.inApp}
+              onChange={() =>
+                setNotifPrefs((prev) => ({
+                  ...prev,
+                  inApp: !prev.inApp,
+                }))
+              }
+            />
+            <span />
+          </label>
+        </div>
+
+        <div className="notification-option">
+          <div>
+            <strong>Push Notifications</strong>
+            <span>Receive browser push notifications.</span>
+          </div>
+
+          <label className="switch">
+            <input
+              type="checkbox"
+              checked={notifPrefs.push}
+              onChange={() =>
+                setNotifPrefs((prev) => ({
+                  ...prev,
+                  push: !prev.push,
+                }))
+              }
+            />
+            <span />
+          </label>
+        </div>
+      </div>
+
+      <div className="notification-list">
+        <h3>Recent Notifications</h3>
 
         {notifications.length === 0 ? (
           <div className="empty-notifications">
             <Bell size={28} />
-            <strong>No notifications yet</strong>
-            <span>
-              Important account updates will appear here.
-            </span>
+            <p>No notifications yet.</p>
           </div>
         ) : (
-          <div className="notifications-list">
-            {notifications.map((notification) => (
-              <button
-                key={notification.id}
-                type="button"
-                className={`notification-item ${
-                  notification.read ? "read" : "unread"
-                }`}
-                onClick={() =>
-                  markNotificationRead(notification.id)
-                }
-              >
-                <span className="notification-dot" />
-
-                <span className="notification-content">
-                  <strong>{notification.message}</strong>
-                  <small>
-                    {new Date(
-                      notification.date
-                    ).toLocaleString()}
-                  </small>
-                </span>
-
-                {!notification.read && (
-                  <span className="new-label">NEW</span>
-                )}
-              </button>
-            ))}
-          </div>
+          notifications.map((notification) => (
+            <button
+              key={notification.id}
+              className={`notification ${
+                notification.read ? "read" : "unread"
+              }`}
+              onClick={() =>
+                markAsRead(notification.id)
+              }
+            >
+              <span>{notification.message}</span>
+              {!notification.read && <b>NEW</b>}
+            </button>
+          ))
         )}
       </div>
     </section>
   );
 
-  const renderThemeTab = () => {
+  /* ================================
+     THEME TAB
+  ================================= */
+
+  const renderTheme = () => {
     const colors = [
+      "#ff8a34",
       "#0d6efd",
       "#198754",
       "#dc3545",
-      "#f7931e",
       "#6f42c1",
     ];
 
     return (
       <section className="account-card">
-        <div className="account-card-head">
+        <div className="card-heading">
           <div>
-            <span className="account-kicker">APPEARANCE</span>
-            <h1>Theme Settings</h1>
-            <p>Customize the appearance of your AirStride account.</p>
+            <span className="eyebrow">APPEARANCE</span>
+            <h2>Theme Settings</h2>
+            <p>Customize how your account looks.</p>
           </div>
+
+          {theme === "dark" ? (
+            <Sun size={24} />
+          ) : (
+            <Moon size={24} />
+          )}
         </div>
 
         <div className="theme-section">
-          <div className="theme-option-card">
-            <div className="theme-option-icon">
-              {theme === "dark" ? (
-                <Moon size={21} />
-              ) : (
-                <Sun size={21} />
-              )}
-            </div>
+          <h3>Interface Theme</h3>
 
-            <div>
-              <strong>
-                {theme === "dark" ? "Dark Mode" : "Light Mode"}
-              </strong>
-
-              <span>
-                {theme === "dark"
-                  ? "A darker interface for low-light environments."
-                  : "A bright interface for everyday use."}
-              </span>
-            </div>
-
-            <button
-              className="theme-switch"
-              type="button"
-              onClick={toggleTheme}
-            >
-              {theme === "dark"
-                ? "Use Light"
-                : "Use Dark"}
-            </button>
-          </div>
+          <button
+            className="theme-toggle"
+            onClick={toggleTheme}
+          >
+            {theme === "dark" ? (
+              <>
+                <Sun size={18} />
+                Switch to Light Mode
+              </>
+            ) : (
+              <>
+                <Moon size={18} />
+                Switch to Dark Mode
+              </>
+            )}
+          </button>
         </div>
 
-        <div className="accent-section">
-          <div className="accent-head">
-            <div>
-              <h3>Accent Color</h3>
-              <span>
-                Choose the highlight color used throughout your account.
-              </span>
-            </div>
+        <div className="theme-section">
+          <h3>Accent Color</h3>
+          <p>Choose your preferred interface accent.</p>
 
-            <span
-              className="accent-value"
-              style={{ borderColor: accentColor }}
-            >
-              {accentColor}
-            </span>
-          </div>
-
-          <div className="colors-list">
+          <div className="color-list">
             {colors.map((color) => (
               <button
                 key={color}
@@ -1091,57 +846,50 @@ const AccountSettings = () => {
                 }`}
                 style={{ backgroundColor: color }}
                 onClick={() => setAccentColor(color)}
-                aria-label={`Use ${color} accent`}
-              >
-                {accentColor === color && (
-                  <Check size={18} />
-                )}
-              </button>
+                aria-label={`Choose ${color}`}
+              />
             ))}
           </div>
         </div>
 
         <div
           className="theme-preview"
-          style={{
-            borderColor: accentColor,
-          }}
+          style={{ borderColor: accentColor }}
         >
-          <span className="preview-label">PREVIEW</span>
+          <div
+            className="preview-dot"
+            style={{ backgroundColor: accentColor }}
+          />
 
-          <h3>Your AirStride workspace</h3>
-
-          <p>
-            This is how your selected accent color will appear
-            across interactive elements.
-          </p>
-
-          <button
-            type="button"
-            style={{
-              backgroundColor: accentColor,
-            }}
-          >
-            Example Button
-          </button>
+          <div>
+            <strong>Theme Preview</strong>
+            <p>Your selected accent will be used throughout the interface.</p>
+          </div>
         </div>
       </section>
     );
   };
 
+  /* ================================
+     RENDER
+  ================================= */
+
   const renderTab = () => {
     switch (tab) {
+      case "profile":
+        return renderProfile();
+
       case "password":
-        return renderPasswordTab();
+        return renderPassword();
 
       case "alerts":
-        return renderAlertsTab();
+        return renderAlerts();
 
       case "theme":
-        return renderThemeTab();
+        return renderTheme();
 
       default:
-        return renderProfileTab();
+        return renderProfile();
     }
   };
 
@@ -1150,85 +898,90 @@ const AccountSettings = () => {
       <ToastContainer
         position="top-right"
         autoClose={3000}
-        newestOnTop
         theme={theme === "dark" ? "dark" : "light"}
       />
 
-      {showConfetti && (
-        <Confetti
-          recycle={false}
-          numberOfPieces={250}
-        />
-      )}
+      <div className={`account-page ${theme}`}>
+        <div className="account-container">
 
-      <div className="settings-page">
-        <aside className="account-sidebar">
-          <div className="account-sidebar-top">
-            <div className="account-mini-avatar">
-              {user.profileImg ? (
-                <img
-                  src={user.profileImg}
-                  alt="Profile"
-                />
-              ) : (
-                <span>{initials}</span>
-              )}
-            </div>
-
-            <div className="account-mini-info">
-              <strong>
-                {user.firstName || "AirStride User"}
-              </strong>
-              <span>{user.email}</span>
+          <div className="account-title">
+            <div>
+              <span>ACCOUNT</span>
+              <h1>Account Settings</h1>
+              <p>
+                Manage your profile, security and preferences.
+              </p>
             </div>
           </div>
 
-          <nav className="account-nav">
-            {tabs.map((item) => {
-              const Icon = item.icon;
+          <div className="account-layout">
 
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  className={`side-btn ${
-                    tab === item.id ? "active" : ""
-                  }`}
-                  onClick={() => setTab(item.id)}
-                >
-                  <Icon size={18} />
-
-                  <span className="side-label">
-                    {item.label}
-                  </span>
-
-                  {item.badge > 0 && (
-                    <span className="side-badge">
-                      {item.badge}
-                    </span>
+            <aside className="account-sidebar">
+              <div className="sidebar-user">
+                <div className="sidebar-avatar">
+                  {user.profileImg ? (
+                    <img
+                      src={user.profileImg}
+                      alt="Profile"
+                    />
+                  ) : (
+                    getInitials()
                   )}
-                </button>
-              );
-            })}
-          </nav>
+                </div>
 
-          <div className="sidebar-footer">
-            <ShieldCheck size={17} />
-            <span>Account protected</span>
+                <div>
+                  <strong>
+                    {user.firstName || "User"}{" "}
+                    {user.lastName}
+                  </strong>
+
+                  <span>{user.email}</span>
+                </div>
+              </div>
+
+              <div className="sidebar-divider" />
+
+              <nav>
+                {tabs.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <button
+                      key={item.id}
+                      className={`account-tab ${
+                        tab === item.id ? "active" : ""
+                      }`}
+                      onClick={() => {
+                        setTab(item.id);
+
+                        if (item.id === "alerts") {
+                          addNotification(
+                            "You opened your notification settings."
+                          );
+                        }
+                      }}
+                    >
+                      <Icon size={18} />
+                      <span>{item.label}</span>
+                    </button>
+                  );
+                })}
+              </nav>
+            </aside>
+
+            <main className="account-content">
+              {loading && tab === "profile" ? (
+                <div className="account-loading">
+                  <div className="loading-spinner" />
+                  <p>Loading your account...</p>
+                </div>
+              ) : (
+                renderTab()
+              )}
+            </main>
+
           </div>
-        </aside>
-
-        <main className="account-content">
-          {loading && tab === "profile" ? (
-            <section className="account-card account-loading">
-              <div className="loading-spinner" />
-              <strong>Loading your profile...</strong>
-              <span>Please wait a moment.</span>
-            </section>
-          ) : (
-            renderTab()
-          )}
-        </main>
+        </div>
       </div>
     </>
   );
