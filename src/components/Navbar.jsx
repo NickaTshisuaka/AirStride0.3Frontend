@@ -175,21 +175,6 @@ const Navbar = () => {
           <Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>Contact Us</Link>
         </nav>
 
-        <div className="nav-actions">
-          {showSearch && (
-            <div className="search-bar">
-              <i className="fas fa-search"></i>
-              <input type="text" value={navSearch} placeholder="Search products..." onChange={(e) => {setNavSearch(e.target.value);
-                  window.dispatchEvent(
-                    new CustomEvent("productSearch", {
-                      detail: e.target.value,
-                    }),
-                  );
-                }}
-              />
-            </div>
-          )}
-
           <Link to="/favorites" className={`nav-icon ${favAnimate ? "fav-bounce" : ""}`} title="Favorites">
             <i className="far fa-heart"></i>
             {favoritesCount > 0 && (<span className="fav-count">{favoritesCount}</span> )}
@@ -202,7 +187,7 @@ const Navbar = () => {
             {cartCount > 0 && <span className="cart-count">{cartCount}</span>}
           </div>
         </div>
-      </div>
+      
     </header>
   );
 };

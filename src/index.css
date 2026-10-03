@@ -3,3 +3,17 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --card: #f8f8f8;
+  --accent: #f7931e;
+}
+
+[data-theme="dark"] {
+  --bg: #111111;
+  --text: #f8f8f8;
+  --card: #1e1e1e;
+  --accent: #f7931e;
+}

@@ -1,7 +1,16 @@
+
 // src/pages/Products/Products.jsx
-import React, { useState, useEffect } from "react";
+
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { ShoppingCart, Heart } from "lucide-react";
+import {
+  ShoppingCart,
+  Heart,
+  Search,
+  SlidersHorizontal,
+  Package,
+  X,
+} from "lucide-react";
 import { useCartContext } from "../../contexts/CartContext";
 import { useFavoritesContext } from "../../contexts/FavoritesContext";
 import { useAuth } from "../../AuthContext";
@@ -10,7 +19,6 @@ import "./Products.css";
 
 const BASE_API_URL = import.meta.env.VITE_API_URL;
 
-// How long cache should live (milliseconds) — e.g. 2 hours
 const CACHE_LIFETIME = 1000 * 60 * 60 * 2;
 
 const Products = () => {
@@ -20,245 +28,697 @@ const Products = () => {
   const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState("default");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [toastMessage, setToastMessage] = useState("");
 
-  /** -------------------------------------
-   * NORMALIZE PRODUCT SHAPE
-   ---------------------------------------- */
+  /* =========================
+     NORMALIZE PRODUCT
+  ========================= */
+
   const normalizeProduct = (p) => ({
     ...p,
-    _id: p._id,
-    product_id: p._id,
-    imageUrl: p.imageUrl || p.image || "https://placehold.co/600x600",
-    price: Number(p.price || 0),
-    inventory_count: p.inventory_count ?? 0,
+
+    product_id:
+      p.product_id ??
+      p._id ??
+      p.id,
+
+    name:
+      p.name ??
+      p.product_name ??
+      "Unnamed Product",
+
+    category:
+      p.category ??
+      p.category_name ??
+      `Category ${p.category_id ?? ""}`,
+
+    price: Number(p.price ?? 0),
+
+    inventory_count: Number(
+      p.inventory_count ??
+      p.stock ??
+      0
+    ),
+
+    imageUrl:
+      p.imageurl ??
+      p.imageUrl ??
+      p.image ??
+      p.image_url ??
+      "",
+
+    description:
+      p.description ??
+      "Quality AirStride product designed for your active lifestyle.",
+
+    brand:
+      p.brand ??
+      "AirStride",
+
+    material:
+      p.material ??
+      "",
+
+    tags:
+      Array.isArray(p.tags)
+        ? p.tags
+        : [],
   });
 
-  /** -------------------------------------
-   * LOCAL STORAGE CACHING
-   ---------------------------------------- */
+  /* =========================
+     CACHE
+  ========================= */
+
   const loadFromCache = () => {
     try {
-      const cached = JSON.parse(localStorage.getItem("products_cache"));
+      const cached = JSON.parse(
+        localStorage.getItem("products_cache")
+      );
+
       if (!cached) return null;
 
-      const expired = Date.now() - cached.timestamp > CACHE_LIFETIME;
+      const expired =
+        Date.now() - cached.timestamp > CACHE_LIFETIME;
+
       if (expired) {
         localStorage.removeItem("products_cache");
         return null;
       }
 
       return cached.products;
-    } catch (e) {
+    } catch {
       return null;
     }
   };
 
-  const saveToCache = (products) => {
-    localStorage.setItem(
-      "products_cache",
-      JSON.stringify({
-        timestamp: Date.now(),
-        products,
-      })
-    );
+  const saveToCache = (items) => {
+    try {
+      localStorage.setItem(
+        "products_cache",
+        JSON.stringify({
+          timestamp: Date.now(),
+          products: items,
+        })
+      );
+    } catch {
+      // Ignore localStorage errors
+    }
   };
 
-  /** -------------------------------------
-   * FETCH PRODUCTS (with caching)
-   ---------------------------------------- */
+  /* =========================
+     FETCH PRODUCTS
+  ========================= */
+
   useEffect(() => {
     if (authLoading) return;
 
-    // 1️⃣ — Try to load cached products immediately
+    let mounted = true;
+
     const cachedProducts = loadFromCache();
-    if (cachedProducts) {
+
+    if (cachedProducts?.length) {
       setProducts(cachedProducts);
-      setFilteredProducts(cachedProducts);
-      setLoading(false); // show cached instantly
+      setLoading(false);
     }
 
-    // 2️⃣ — Always refresh from API in background
     const fetchProducts = async () => {
       try {
-        const headers = idToken ? { Authorization: `Bearer ${idToken}` } : {};
-        const res = await axios.get(`${BASE_API_URL}/products`, { headers });
+        setError("");
 
-        const prods = Array.isArray(res.data)
-          ? res.data
-          : res.data.products || res.data.data || [];
+        const headers = idToken
+          ? {
+              Authorization: `Bearer ${idToken}`,
+            }
+          : {};
 
-        const normalized = prods.map(normalizeProduct);
+        const baseUrl =
+          BASE_API_URL?.replace(/\/$/, "");
 
-        setProducts(normalized);
-        setFilteredProducts(normalized);
+        if (!baseUrl) {
+          throw new Error(
+            "VITE_API_URL is not configured."
+          );
+        }
 
-        // Save to localStorage
-        saveToCache(normalized);
+        const response = await axios.get(
+          `${baseUrl}/api/products`,
+          {
+            headers,
+            timeout: 15000,
+          }
+        );
+
+        console.log("Products API response:", response.data);
+
+        const rawProducts = Array.isArray(response.data)
+          ? response.data
+          : response.data?.products ??
+            response.data?.data ??
+            response.data?.rows ??
+            [];
+
+        if (!Array.isArray(rawProducts)) {
+          throw new Error(
+            "The API returned an unexpected product format."
+          );
+        }
+
+        const normalized = rawProducts
+          .map(normalizeProduct)
+          .filter((product) => product.product_id);
+
+        if (mounted) {
+          setProducts(normalized);
+          saveToCache(normalized);
+
+          if (!normalized.length) {
+            setError(
+              "The API responded successfully, but no products were returned."
+            );
+          }
+        }
       } catch (err) {
         console.error("Product fetch error:", err);
 
-        // If there was cached data, do NOT show error
-        if (!cachedProducts) {
+        if (!mounted) return;
+
+        if (!cachedProducts?.length) {
           setProducts([]);
-          setFilteredProducts([]);
+
+          setError(
+            err.response?.data?.message ||
+            err.message ||
+            "Unable to load products."
+          );
         }
       } finally {
-        // If no cache was loaded, this sets loading false
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     };
 
     fetchProducts();
+
+    return () => {
+      mounted = false;
+    };
   }, [idToken, authLoading]);
 
-  /** -------------------------------------
-   * SEARCH FILTERING
-   ---------------------------------------- */
-  const normalizeString = (str) =>
-    str?.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "") ||
-    "";
+  /* =========================
+     NAVBAR SEARCH
+  ========================= */
 
   useEffect(() => {
-    const term = normalizeString(searchTerm);
-    if (!term) {
-      setFilteredProducts(products);
+    const handleSearch = (event) => {
+      setSearchTerm(event.detail || "");
+    };
+
+    window.addEventListener(
+      "productSearch",
+      handleSearch
+    );
+
+    return () => {
+      window.removeEventListener(
+        "productSearch",
+        handleSearch
+      );
+    };
+  }, []);
+
+  /* =========================
+     CATEGORIES
+  ========================= */
+
+  const categories = useMemo(() => {
+    const values = products
+      .map((product) => product.category)
+      .filter(Boolean);
+
+    return ["All", ...new Set(values)];
+  }, [products]);
+
+  /* =========================
+     FILTER + SORT
+  ========================= */
+
+  const filteredProducts = useMemo(() => {
+    const term = searchTerm
+      .toLowerCase()
+      .trim();
+
+    let result = products.filter((product) => {
+      const matchesSearch =
+        !term ||
+        product.name
+          .toLowerCase()
+          .includes(term) ||
+        product.category
+          .toLowerCase()
+          .includes(term) ||
+        product.brand
+          .toLowerCase()
+          .includes(term);
+
+      const matchesCategory =
+        selectedCategory === "All" ||
+        product.category === selectedCategory;
+
+      return matchesSearch && matchesCategory;
+    });
+
+    if (sortBy === "price-low") {
+      result = [...result].sort(
+        (a, b) => a.price - b.price
+      );
+    }
+
+    if (sortBy === "price-high") {
+      result = [...result].sort(
+        (a, b) => b.price - a.price
+      );
+    }
+
+    if (sortBy === "name") {
+      result = [...result].sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+    }
+
+    return result;
+  }, [
+    products,
+    searchTerm,
+    selectedCategory,
+    sortBy,
+  ]);
+
+  /* =========================
+     HELPERS
+  ========================= */
+
+  const isInCart = (id) =>
+    cart.some(
+      (item) =>
+        item.product_id === id
+    );
+
+  const isFavorite = (id) =>
+    favorites.some(
+      (item) =>
+        item.product_id === id
+    );
+
+  const handleAddToCart = (product) => {
+    if (product.inventory_count < 1) {
+      setToastMessage(
+        `${product.name} is out of stock`
+      );
       return;
     }
 
-    const filtered = products.filter((p) => {
-      const name = normalizeString(p.name);
-      const category = normalizeString(p.category);
-      return name.includes(term) || category.includes(term);
-    });
-
-    setFilteredProducts(filtered);
-  }, [searchTerm, products]);
-
-  /** -------------------------------------
-   * HIGHLIGHT MATCHES
-   ---------------------------------------- */
-  const highlightMatch = (text) => {
-    const term = normalizeString(searchTerm);
-    if (!term) return text;
-    return text.replace(new RegExp(`(${term})`, "gi"), "<mark>$1</mark>");
-  };
-
-  /** -------------------------------------
-   * INTERACTIONS
-   ---------------------------------------- */
-  const isInCart = (id) => cart.some((item) => item.product_id === id);
-  const isFavorite = (id) => favorites.some((item) => item.product_id === id);
-
-  const handleAddToCart = (product) => {
-    if (!isInCart(product.product_id)) {
-      addToCart(product);
-      setToastMessage(`${product.name} added to cart 🛒`);
-    } else {
-      setToastMessage(`${product.name} is already in your cart`);
+    if (isInCart(product.product_id)) {
+      setToastMessage(
+        `${product.name} is already in your cart`
+      );
+      return;
     }
+
+    addToCart(product);
+
+    setToastMessage(
+      `${product.name} added to cart`
+    );
   };
 
   const handleToggleFavorite = (product) => {
     if (isFavorite(product.product_id)) {
       removeFavorite(product.product_id);
-      setToastMessage(`${product.name} removed from favorites ❤️`);
+
+      setToastMessage(
+        `${product.name} removed from favorites`
+      );
     } else {
       addFavorite(product);
-      setToastMessage(`${product.name} added to favorites ❤️`);
+
+      setToastMessage(
+        `${product.name} added to favorites`
+      );
     }
   };
-  // Listen for navbar search input
-useEffect(() => {
-  const handleSearch = (e) => {
-    setSearchTerm(e.detail); // Update Products page search
+
+  const clearSearch = () => {
+    setSearchTerm("");
+    setSelectedCategory("All");
   };
 
-  window.addEventListener("productSearch", handleSearch);
-  return () => window.removeEventListener("productSearch", handleSearch);
-}, []);
+  /* =========================
+     TOAST
+  ========================= */
 
+  useEffect(() => {
+    if (!toastMessage) return;
 
-  /** -------------------------------------
-   * RENDER
-   ---------------------------------------- */
+    const timer = setTimeout(() => {
+      setToastMessage("");
+    }, 2500);
+
+    return () => clearTimeout(timer);
+  }, [toastMessage]);
+
+  /* =========================
+     RENDER
+  ========================= */
+
   return (
-    <div className="products-page">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+    <main className="products-page">
 
-      <section className="products-grid">
-        {loading
-          ? Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} className="product-card shimmer">
-                <div className="product-img-placeholder"></div>
-                <div className="info-placeholder">
-                  <div className="line short"></div>
-                  <div className="line medium"></div>
-                  <div className="line long"></div>
-                </div>
-              </div>
-            ))
-          : filteredProducts.map((product) => (
-              <div key={product._id} className="product-card">
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="product-img"
-                />
+      {/* HERO */}
 
-                <div className="info">
-                  <h3
-                    dangerouslySetInnerHTML={{
-                      __html: highlightMatch(product.name),
-                    }}
-                  />
+      <section className="products-hero">
+        <div className="hero-content">
+          <span className="hero-label">
+            AIRSTRIDE STORE
+          </span>
 
-                  <p>R{product.price.toFixed(2)}</p>
+          <h1>
+            Move Better.
+            <span> Live Better.</span>
+          </h1>
 
-                  {product.inventory_count < 1 && (
-                    <p className="out-of-stock">Out of Stock</p>
-                  )}
+          <p>
+            Explore our collection of performance
+            footwear, fitness equipment and
+            active lifestyle products.
+          </p>
 
-                  <div className="buttons">
-                    {/* CART */}
-                    <button
-                      onClick={() => handleAddToCart(product)}
-                      disabled={product.inventory_count < 1 || isInCart(product.product_id)}
-                    >
-                      <ShoppingCart />{" "}
-                      {isInCart(product.product_id) ? "In Cart" : "Add to Cart"}
-                    </button>
-
-                    {/* FAVORITES */}
-                    <button onClick={() => handleToggleFavorite(product)}>
-                      <Heart
-                        fill={isFavorite(product.product_id) ? "currentColor" : "none"}
-                      />
-                      {isFavorite(product.product_id) ? "Unfav" : "Fav"}
-                    </button>
-
-                    {/* DETAIL PAGE */}
-                    <button onClick={() => navigate(`/product/${product.product_id}`)}>
-                      View Details
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div className="hero-stat">
+            <Package size={18} />
+            <span>
+              {products.length} products available
+            </span>
+          </div>
+        </div>
       </section>
 
-      {toastMessage && <div className="toast">{toastMessage}</div>}
-    </div>
+      {/* TOOLBAR */}
+
+      <section className="products-toolbar">
+
+        <div className="product-search">
+          <Search size={19} />
+
+          <input
+            type="text"
+            placeholder="Search products, brands..."
+            value={searchTerm}
+            onChange={(e) =>
+              setSearchTerm(e.target.value)
+            }
+          />
+
+          {searchTerm && (
+            <button
+              className="clear-search"
+              onClick={() => setSearchTerm("")}
+              aria-label="Clear search"
+            >
+              <X size={17} />
+            </button>
+          )}
+        </div>
+
+        <div className="toolbar-actions">
+          <div className="category-filter">
+            <SlidersHorizontal size={17} />
+
+            <select
+              value={selectedCategory}
+              onChange={(e) =>
+                setSelectedCategory(e.target.value)
+              }
+            >
+              {categories.map((category) => (
+                <option
+                  key={category}
+                  value={category}
+                >
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <select
+            className="sort-filter"
+            value={sortBy}
+            onChange={(e) =>
+              setSortBy(e.target.value)
+            }
+          >
+            <option value="default">
+              Sort: Featured
+            </option>
+
+            <option value="price-low">
+              Price: Low to High
+            </option>
+
+            <option value="price-high">
+              Price: High to Low
+            </option>
+
+            <option value="name">
+              Name: A-Z
+            </option>
+          </select>
+        </div>
+      </section>
+
+      {/* RESULT COUNT */}
+
+      {!loading && !error && (
+        <div className="results-row">
+          <span>
+            Showing{" "}
+            <strong>
+              {filteredProducts.length}
+            </strong>{" "}
+            products
+          </span>
+
+          {(searchTerm ||
+            selectedCategory !== "All") && (
+            <button onClick={clearSearch}>
+              Clear filters
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* ERROR */}
+
+      {!loading && error && (
+        <div className="products-error">
+          <Package size={35} />
+
+          <h2>Products couldn't be loaded</h2>
+
+          <p>{error}</p>
+
+          <small>
+            Check that your VITE_API_URL points to
+            your AirStride backend.
+          </small>
+        </div>
+      )}
+
+      {/* PRODUCTS */}
+
+      <section className="products-grid">
+
+        {loading &&
+          Array.from({ length: 8 }).map((_, index) => (
+            <div
+              className="product-card skeleton-card"
+              key={index}
+            >
+              <div className="skeleton-image" />
+
+              <div className="skeleton-content">
+                <div className="skeleton-line small" />
+                <div className="skeleton-line" />
+                <div className="skeleton-line price" />
+              </div>
+            </div>
+          ))}
+
+        {!loading &&
+          !error &&
+          filteredProducts.map((product) => (
+            <article
+              className="product-card"
+              key={product.product_id}
+            >
+
+              {/* IMAGE */}
+
+              <div className="product-image-wrap">
+
+                <button
+                  className={`favorite-btn ${
+                    isFavorite(product.product_id)
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() =>
+                    handleToggleFavorite(product)
+                  }
+                  aria-label="Toggle favorite"
+                >
+                  <Heart
+                    size={19}
+                    fill={
+                      isFavorite(
+                        product.product_id
+                      )
+                        ? "currentColor"
+                        : "none"
+                    }
+                  />
+                </button>
+
+                {product.inventory_count < 1 && (
+                  <span className="stock-badge">
+                    Out of stock
+                  </span>
+                )}
+
+                <img
+                  src={
+                    product.imageUrl ||
+                    "https://placehold.co/700x700/f1f4f8/687386?text=AirStride"
+                  }
+                  alt={product.name}
+                  className="product-img"
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "https://placehold.co/700x700/f1f4f8/687386?text=AirStride";
+                  }}
+                />
+
+              </div>
+
+              {/* INFO */}
+
+              <div className="product-info">
+
+                <span className="product-category">
+                  {product.category}
+                </span>
+
+                <h2>{product.name}</h2>
+
+                <p className="product-description">
+                  {product.description}
+                </p>
+
+                <div className="product-bottom">
+
+                  <strong className="product-price">
+                    R{product.price.toFixed(2)}
+                  </strong>
+
+                  {product.inventory_count > 0 && (
+                    <span className="stock-count">
+                      {product.inventory_count} available
+                    </span>
+                  )}
+
+                </div>
+
+                {/* ACTIONS */}
+
+                <div className="product-actions">
+
+                  <button
+                    className="cart-btn"
+                    onClick={() =>
+                      handleAddToCart(product)
+                    }
+                    disabled={
+                      product.inventory_count < 1 ||
+                      isInCart(
+                        product.product_id
+                      )
+                    }
+                  >
+                    <ShoppingCart size={17} />
+
+                    {isInCart(
+                      product.product_id
+                    )
+                      ? "In Cart"
+                      : "Add to Cart"}
+                  </button>
+
+                  <button
+                    className="details-btn"
+                    onClick={() =>
+                      navigate(
+                        `/product/${product.product_id}`
+                      )
+                    }
+                  >
+                    View
+                  </button>
+
+                </div>
+
+              </div>
+            </article>
+          ))}
+
+      </section>
+
+      {/* EMPTY */}
+
+      {!loading &&
+        !error &&
+        filteredProducts.length === 0 && (
+          <div className="empty-products">
+
+            <Search size={42} />
+
+            <h2>No products found</h2>
+
+            <p>
+              Try another search or remove the
+              selected filters.
+            </p>
+
+            <button onClick={clearSearch}>
+              View all products
+            </button>
+
+          </div>
+        )}
+
+      {/* TOAST */}
+
+      {toastMessage && (
+        <div className="product-toast">
+          {toastMessage}
+        </div>
+      )}
+
+    </main>
   );
 };
 
