@@ -24,7 +24,7 @@ html, body {
   padding: 0;
 }
 
-/* Left Hero Media Column */
+
 .sports-video {
   width: 50%;
   height: 100%;
@@ -36,7 +36,6 @@ html, body {
   align-items: center;
 }
 
-/* Shadow Layer over media content to add premium texture */
 .sports-video::after {
   content: '';
   position: absolute;
