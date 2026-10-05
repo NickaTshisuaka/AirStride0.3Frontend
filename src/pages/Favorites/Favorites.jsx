@@ -1,90 +1,195 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useFavoritesContext } from "../../contexts/FavoritesContext";
 import { useCartContext } from "../../contexts/CartContext";
 import { ShoppingCart, Heart } from "lucide-react";
 import "./Favorites.css";
 
 const Favorites = () => {
-  const navigate = useNavigate();
   const { favorites, removeFavorite } = useFavoritesContext();
   const { addToCart, cart } = useCartContext();
+
   const [toastMessage, setToastMessage] = useState("");
 
-  // Check if a product is in the cart
-  const isInCart = (id) => cart.some((item) => item.product_id === id);
+  // ---------------------------------------------
+  // CHECK IF PRODUCT IS IN CART
+  // ---------------------------------------------
+ const getProductId = (item) =>
+  String(item.product_id ?? item._id ?? item.id ?? "");
 
-  // Add product to cart
+const isInCart = (id) =>
+  cart.some((item) => getProductId(item) === String(id));
+
+  // ---------------------------------------------
+  // ADD TO CART
+  // ---------------------------------------------
   const handleAddToCart = (item) => {
-    if (!isInCart(item.product_id)) {
-      addToCart(item);
-      setToastMessage(`${item.name} added to cart 🛒`);
-    } else {
-      setToastMessage(`${item.name} is already in cart`);
+   const alreadyInCart = isInCart(getProductId(item));
+
+    if (alreadyInCart) {
+      setToastMessage(
+        `${item.name} is already in cart`
+      );
+      return;
     }
+
+    addToCart(item);
+
+    setToastMessage(
+      `${item.name} added to cart 🛒`
+    );
   };
 
-  // Remove product from favorites
+  // ---------------------------------------------
+  // REMOVE FAVORITE
+  // ---------------------------------------------
   const handleRemoveFavorite = (id, name) => {
-    console.log("Removing favorite:", id, name);
-
-    // Remove from context
     removeFavorite(id);
 
-    // Show toast
-    setToastMessage(`${name} removed from favorites ❤️`);
+    setToastMessage(
+      `${name} removed from favorites ❤️`
+    );
   };
 
-  // Auto-hide toast
+  // ---------------------------------------------
+  // AUTO-HIDE TOAST
+  // ---------------------------------------------
   useEffect(() => {
     if (!toastMessage) return;
-    const timer = setTimeout(() => setToastMessage(""), 2000);
+
+    const timer = setTimeout(() => {
+      setToastMessage("");
+    }, 2000);
+
     return () => clearTimeout(timer);
   }, [toastMessage]);
 
+  // ---------------------------------------------
+  // RENDER
+  // ---------------------------------------------
   return (
-    <div className="favorites-page">
-      <h2>❤️ Your Favorites</h2>
+    <main className="favorites-page">
+      <h2>
+        <Heart
+          size={28}
+          fill="currentColor"
+          aria-hidden="true"
+        />{" "}
+        Your Favorites
+      </h2>
 
       {favorites.length === 0 ? (
-        <p className="no-favorites">
-          No favorites yet. Browse products to add some!
-        </p>
+        <div className="no-favorites">
+          <Heart
+            size={50}
+            strokeWidth={1.5}
+            aria-hidden="true"
+          />
+
+          <p>
+            No favorites yet. Browse products to add
+            some!
+          </p>
+        </div>
       ) : (
         <div className="favorites-grid">
-          {favorites.map((item) => (
-            <div key={item.product_id} className="favorite-card">
-              <img
-                src={item.image || item.imageUrl || "https://placehold.co/300x300?text=No+Image"}
-                alt={item.name}
-                className="favorite-img"
-              />
-              <h3 className="favorite-name">{item.name}</h3>
-              <p className="favorite-price">R{(item.price || 0).toFixed(2)}</p>
+          {favorites.map((item) => {
+            const productInCart = isInCart(
+              getProductId(item)
+            );
 
-              <div className="favorite-buttons">
-                <button
-                  className="btn remove-fav-btn"
-                  onClick={() => handleRemoveFavorite(item.product_id, item.name)}
-                >
-                  <Heart fill="red" /> Remove
-                </button>
+            const price = Number(item.price) || 0;
 
-                <button
-                  className={`btn add-cart-btn ${isInCart(item.product_id) ? "in-cart" : ""}`}
-                  onClick={() => handleAddToCart(item)}
-                  disabled={isInCart(item.product_id)}
-                >
-                  <ShoppingCart /> {isInCart(item.product_id) ? "In Cart" : "Add to Cart"}
-                </button>
-              </div>
-            </div>
-          ))}
+            const image =
+            item.imageUrl ||
+              "https://placehold.co/300x300?text=No+Image";
+
+            return (
+              <article
+                key={getProductId(item)}
+                className="favorite-card"
+              >
+                {/* PRODUCT IMAGE */}
+                <img
+                  src={image}
+                  alt={item.name}
+                  className="favorite-img"
+                  loading="lazy"
+                />
+
+                {/* PRODUCT NAME */}
+                <h3 className="favorite-name">
+                  {item.name}
+                </h3>
+
+                {/* PRODUCT PRICE */}
+                <p className="favorite-price">
+                  R{price.toFixed(2)}
+                </p>
+
+                {/* ACTION BUTTONS */}
+                <div className="favorite-buttons">
+                  <button
+                    type="button"
+                    className="btn remove-fav-btn"
+                    onClick={() =>
+                      handleRemoveFavorite(
+                     getProductId(item),
+                      item.name
+                    )
+                    }
+                    aria-label={`Remove ${item.name} from favorites`}
+                  >
+                    <Heart
+                      size={17}
+                      fill="currentColor"
+                      aria-hidden="true"
+                    />
+
+                    Remove
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`btn add-cart-btn ${
+                      productInCart ? "in-cart" : ""
+                    }`}
+                    onClick={() =>
+                      handleAddToCart(item)
+                    }
+                    disabled={productInCart}
+                    aria-label={
+                      productInCart
+                        ? `${item.name} is already in cart`
+                        : `Add ${item.name} to cart`
+                    }
+                  >
+                    <ShoppingCart
+                      size={17}
+                      aria-hidden="true"
+                    />
+
+                    {productInCart
+                      ? "In Cart"
+                      : "Add to Cart"}
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
 
-      {toastMessage && <div className="toast">{toastMessage}</div>}
-    </div>
+      {/* TOAST */}
+      {toastMessage && (
+        <div
+          className="toast"
+          role="status"
+          aria-live="polite"
+        >
+          {toastMessage}
+        </div>
+      )}
+    </main>
   );
 };
 

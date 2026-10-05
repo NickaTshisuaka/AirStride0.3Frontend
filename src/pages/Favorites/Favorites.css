@@ -1,136 +1,385 @@
+/* src/pages/Favorites/Favorites.css */
+
+/* =========================================
+   FAVORITES PAGE
+========================================= */
+
 .favorites-page {
-  padding: 2rem;
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  padding: 2rem;
+  color: var(--text-color);
+  transition: color 0.3s ease;
 }
+
+/* =========================================
+   PAGE TITLE
+========================================= */
 
 .favorites-page h2 {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin: 0 0 1.5rem;
   font-size: 2rem;
-  color: #ff6b35; /* Highlight color */
+  font-weight: 700;
+  color: var(--checkout-accent, #ff6b35);
 }
+
+/* =========================================
+   EMPTY FAVORITES
+========================================= */
 
 .no-favorites {
   text-align: center;
   font-size: 1.2rem;
-  color: #555;
+  color: var(--text-color);
+  opacity: 0.7;
+  padding: 3rem 1rem;
 }
+
+/* =========================================
+   FAVORITES GRID
+========================================= */
 
 .favorites-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
   gap: 1.5rem;
 }
 
+/* =========================================
+   FAVORITE CARD
+========================================= */
+
 .favorite-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  background: var(--card-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+
   overflow: hidden;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
   padding: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background-color 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .favorite-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 12px 28px rgba(0, 0, 0, 0.15);
+
+  border-color: var(
+    --checkout-accent,
+    #ff6b35
+  );
 }
+
+/* =========================================
+   FAVORITE IMAGE
+========================================= */
 
 .favorite-img {
   width: 100%;
   height: 200px;
+
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
+
+  border-radius: 10px;
+
+  margin-bottom: 0.9rem;
+
+  background: var(--input-bg);
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
 }
 
+.favorite-card:hover .favorite-img {
+  transform: scale(1.02);
+}
+
+/* =========================================
+   FAVORITE NAME
+========================================= */
+
 .favorite-name {
+  width: 100%;
+
   font-size: 1.1rem;
   font-weight: 600;
+
   text-align: center;
-  margin-bottom: 0.25rem;
+
+  margin: 0 0 0.35rem;
+
+  color: var(--text-color);
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
+/* =========================================
+   FAVORITE PRICE
+========================================= */
 
 .favorite-price {
   font-size: 1rem;
-  color: #ff6b35;
-  margin-bottom: 0.5rem;
+  font-weight: 600;
+
+  color: var(
+    --checkout-accent,
+    #ff6b35
+  );
+
+  margin: 0 0 0.8rem;
 }
+
+/* =========================================
+   BUTTON CONTAINER
+========================================= */
 
 .favorite-buttons {
   display: flex;
+
   gap: 0.5rem;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
   width: 100%;
+
+  margin-top: auto;
 }
+
+/* =========================================
+   COMMON BUTTON
+========================================= */
 
 .favorite-buttons .btn {
   flex: 1 1 45%;
+
+  min-height: 40px;
+
   padding: 0.5rem 0.75rem;
+
   font-size: 0.9rem;
-  border-radius: 6px;
+  font-weight: 600;
+
+  border-radius: 8px;
+
   border: none;
+
   cursor: pointer;
-  transition: background 0.2s ease;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.25rem;
+
+  gap: 0.3rem;
+
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    opacity 0.2s ease;
 }
+
+.favorite-buttons .btn:hover {
+  transform: translateY(-1px);
+}
+
+.favorite-buttons .btn:active {
+  transform: translateY(0);
+}
+
+/* =========================================
+   REMOVE FAVORITE
+========================================= */
 
 .remove-fav-btn {
   background: #ffe6e6;
-  color: #d60000;
+  color: #c40000;
 }
 
 .remove-fav-btn:hover {
   background: #ffcccc;
 }
 
+/* Dark mode */
+[data-theme="dark"] .remove-fav-btn {
+  background: #3a1d1d;
+  color: #ff8585;
+}
+
+[data-theme="dark"] .remove-fav-btn:hover {
+  background: #4a2323;
+}
+
+/* =========================================
+   ADD TO CART
+========================================= */
+
 .add-cart-btn {
   background: #007acc;
-  color: #fff;
+  color: #ffffff;
 }
 
-.add-cart-btn.in-cart {
-  background: #999;
-  cursor: not-allowed;
-}
-
-.add-cart-btn:hover:not(.in-cart) {
+.add-cart-btn:hover {
   background: #005fa3;
 }
 
-/* Toast notification */
-.toast {
-  position: fixed;
-  top: 8rem;
-  right: 4rem;
-  background: #ff6b6b;
-  color: white;
-  padding: 0.8rem 1.2rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-  z-index: 9999;
-  max-width: 250px;
-  font-size: 0.9rem;
-  opacity: 0.95;
-  transition: opacity 0.3s ease;
+.add-cart-btn.in-cart {
+  background: #777;
+  color: #eee;
+  cursor: not-allowed;
+  opacity: 0.8;
 }
 
+.add-cart-btn.in-cart:hover {
+  transform: none;
+}
 
-@keyframes fadein {
+/* =========================================
+   TOAST NOTIFICATION
+========================================= */
+
+.toast {
+  position: fixed;
+
+  top: 8rem;
+  right: 2rem;
+
+  background: var(
+    --checkout-accent,
+    #ff6b35
+  );
+
+  color: #ffffff;
+
+  padding: 0.8rem 1.2rem;
+
+  border-radius: 0.5rem;
+
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.2);
+
+  z-index: 9999;
+
+  max-width: 250px;
+
+  font-size: 0.9rem;
+
+  opacity: 0.97;
+
+  animation: favoriteToastFadeIn 0.3s ease;
+
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+/* =========================================
+   ANIMATION
+========================================= */
+
+@keyframes favoriteToastFadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
-    opacity: 1;
+    opacity: 0.97;
     transform: translateY(0);
+  }
+}
+
+/* =========================================
+   DARK MODE CARD SHADOW
+========================================= */
+
+[data-theme="dark"] .favorite-card {
+  box-shadow:
+    0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .favorite-card:hover {
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 768px) {
+  .favorites-page {
+    padding: 1.25rem;
+  }
+
+  .favorites-page h2 {
+    font-size: 1.7rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+
+    gap: 1rem;
+  }
+
+  .favorite-img {
+    height: 180px;
+  }
+}
+
+@media (max-width: 480px) {
+  .favorites-page {
+    padding: 1rem;
+  }
+
+  .favorites-page h2 {
+    font-size: 1.5rem;
+  }
+
+  .favorites-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .favorite-img {
+    height: 220px;
+  }
+
+  .favorite-buttons {
+    flex-direction: column;
+  }
+
+  .favorite-buttons .btn {
+    width: 100%;
+  }
+
+  .toast {
+    top: 6rem;
+    right: 1rem;
+    left: 1rem;
+    max-width: none;
   }
 }

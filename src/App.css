@@ -1,24 +1,24 @@
-/* ================================
-   GLOBAL THEME
-================================ */
+/* ==============================
+   AIRSTRIDE THEME
+   ============================== */
 
 :root {
-  --bg: #ffffff;
-  --text: #111111;
-  --card: #f8f8f8;
-  --border: #e5e7eb;
+  --bg-color: #ffffff;
+  --text-color: #212529;
+  --card-color: #ffffff;
+  --border-color: #e5e7eb;
   --input-bg: #ffffff;
-  --input-text: #111111;
-  --muted-text: #666666;
-  --accent: #f7931e;
-  --shadow: rgba(0, 0, 0, 0.08);
+  --input-text: #212529;
+  --muted-text: #6c757d;
+  --accent: #0d6efd;
 }
 
+/* Dark mode */
 [data-theme="dark"] {
-  --bg: #111111;
-  --text: #f8f8f8;
-  --card: #1e1e1e;
-  --border: #333333;
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --card-color: #1e1e1e;
+  --border-color: #333333;
   --input-bg: #252525;
   --input-text: #ffffff;
   --muted-text: #bdbdbd;
@@ -26,45 +26,27 @@
   --shadow: rgba(0, 0, 0, 0.4);
 }
 
-/* Entire application */
-html,
-body,
-#root {
-  min-height: 100%;
-  background-color: var(--bg);
-  color: var(--text);
-}
-
+/* Main page background */
 body {
-  margin: 0;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Main containers */
-main,
-section,
-article,
-.page,
-.container {
-  color: var(--text);
-}
-
-/* Cards */
+/* Common cards only */
 .card {
-  background-color: var(--card);
-  color: var(--text);
-  border-color: var(--border);
+  background-color: var(--card-color);
+  color: var(--text-color);
+  border-color: var(--border-color);
 }
 
-/* Forms */
+/* Form controls */
 input,
 textarea,
 select {
   background-color: var(--input-bg);
   color: var(--input-text);
-  border-color: var(--border);
+  border-color: var(--border-color);
 }
 
 input::placeholder,
@@ -72,51 +54,19 @@ textarea::placeholder {
   color: var(--muted-text);
 }
 
-/* Links */
+/* Links inherit the page theme */
 a {
   color: inherit;
 }
 
 /* Smooth theme transition */
-* {
+body,
+.card,
+input,
+textarea,
+select {
   transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease;
-}
-
-/* ================================
-   GLOBAL DARK MODE OVERRIDES
-================================ */
-
-[data-theme="dark"] body {
-  background: #111111 !important;
-  color: #f8f8f8 !important;
-}
-
-[data-theme="dark"] main,
-[data-theme="dark"] section,
-[data-theme="dark"] article,
-[data-theme="dark"] .page,
-[data-theme="dark"] .container {
-  color: #f8f8f8;
-}
-
-[data-theme="dark"] input,
-[data-theme="dark"] textarea,
-[data-theme="dark"] select {
-  background: #252525 !important;
-  color: #ffffff !important;
-  border-color: #444444 !important;
-}
-
-[data-theme="dark"] input::placeholder,
-[data-theme="dark"] textarea::placeholder {
-  color: #aaaaaa !important;
-}
-
-[data-theme="dark"] .card {
-  background: #1e1e1e !important;
-  color: #f8f8f8 !important;
-  border-color: #333333 !important;
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease;
 }

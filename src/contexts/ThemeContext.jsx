@@ -1,4 +1,9 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 
 const ThemeContext = createContext();
 
@@ -6,28 +11,28 @@ export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") || "light"
+    () => localStorage.getItem("theme") || "light"
   );
 
   const [accentColor, setAccentColor] = useState(
-    localStorage.getItem("accentColor") || "#0d6efd"
+    () => localStorage.getItem("accentColor") || "#0d6efd"
   );
 
   const toggleTheme = () => {
-    setTheme((currentTheme) =>
-      currentTheme === "light" ? "dark" : "light"
+    setTheme((current) =>
+      current === "light" ? "dark" : "light"
     );
   };
 
   useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    const root = document.documentElement;
 
-  useEffect(() => {
-    document.documentElement.style.setProperty("--accent", accentColor);
+    root.setAttribute("data-theme", theme);
+    root.style.setProperty("--accent", accentColor);
+
+    localStorage.setItem("theme", theme);
     localStorage.setItem("accentColor", accentColor);
-  }, [accentColor]);
+  }, [theme, accentColor]);
 
   return (
     <ThemeContext.Provider
