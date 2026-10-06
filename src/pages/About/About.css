@@ -36,231 +36,16 @@
   position: relative;
   z-index: 2;
   text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #fff;
 }
 
-.about-hero-content h1 {
-  margin: 0;
-  color: #f7931e;
-  font-family: "Playfair Display", serif;
-  font-size: clamp(3rem, 7vw, 5.5rem);
-  font-weight: 700;
-  letter-spacing: -2px;
-}
-
-
-/* =========================================
-   CARE
-========================================= */
-
-.care-section {
-  max-width: 760px;
-  margin: 0 auto;
-  padding: 42px 25px 35px;
-  text-align: center;
-}
-
-.care-section h2 {
-  margin: 0 0 12px;
-  font-family: "Playfair Display", serif;
-  font-size: 27px;
-  font-weight: 600;
-  color: #f7931e;
-}
-
-.care-line {
-  width: 245px;
-  height: 1px;
-  background: var(--black);
-  margin: 0 auto 18px;
-}
-
-.bottom-line {
-  margin-top: 18px;
-  margin-bottom: 0;
-}
-
-.care-grid {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 85px;
-}
-
-.care-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  min-width: 90px;
-}
-
-.care-item svg {
-  width: 39px;
-  height: 39px;
-  color: #000;
-}
-
-.care-item span {
-  max-width: 105px;
-  font-size: 6px;
-  line-height: 1.5;
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-
-/* =========================================
-   WHO WE ARE
-========================================= */
-
-.about-story {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 55px 45px 105px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  gap: 55px;
-}
-
-.story-image {
-  width: 100%;
-  max-width: 430px;
-}
-
-.story-image img {
-  width: 100%;
-  height: 310px;
-  display: block;
-  object-fit: cover;
-  border-radius: 14px;
-  filter: saturate(0.9);
-}
-
-.story-copy {
-  max-width: 450px;
-}
-
-.story-copy h2,
-.why-copy h2 {
-  margin: 0 0 12px;
-  font-family: "Playfair Display", serif;
-  font-size: 28px;
-  font-weight: 600;
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 6px;
-  color: #f7931e;
-}
-
-.story-copy p,
-.why-copy p {
-  margin: 0 0 14px;
-  font-family: "Playfair Display", serif;
-  font-size: 14px;
-  line-height: 1.8;
-}
-
-
-/* =========================================
-   WHY WE DO IT
-========================================= */
-
-.why-section {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 45px 115px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.why-copy {
-  width: 48%;
-  max-width: 440px;
-}
-
-
-/* =========================================
-   LARGE IMAGE
-========================================= */
-
-.wide-image-section {
-  width: 100%;
-  height: 480px;
-  overflow: hidden;
-}
-
-.wide-image-section img {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: cover;
-  object-position: center;
-  filter: saturate(0.85);
-}
-
-
-/* =========================================
-   QUOTE
-========================================= */
-
-.quote-section {
-  min-height: 235px;
-  padding: 45px 8%;
-  display: grid;
-  grid-template-columns: 60px 1fr 60px;
-  align-items: center;
-  gap: 25px;
-  text-align: center;
-}
-
-.quote-section blockquote {
-  max-width: 780px;
-  margin: 0 auto;
-  font-family: "Playfair Display", serif;
-  font-size: clamp(22px, 3vw, 34px);
-  line-height: 1.5;
-}
-
-.quote-arrow {
-  border: 0;
-  background: transparent;
-  color: var(--black);
-  font-size: 26px;
-  cursor: pointer;
-  transition: transform 0.25s ease;
-}
-
-.quote-arrow:hover {
-  transform: scale(1.15);
-}
-
-
-/* =========================================
-   TEAM
-========================================= */
-
-.team-section {
-  padding: 10px 8% 60px;
-}
-
-.team-section > h2 {
-  margin: 0 0 30px;
-  text-align: center;
-  font-family: "Playfair Display", serif;
-  font-size: 28px;
-  font-weight: 600;
-  color: #f7931e;
-}
-
-.team-strip {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 7px;
-}
-
-.team-image {
+.story-section,
+.values-section,
+.potential-section,
+.team-section,
+.ceo-section {
   position: relative;
   z-index: 1;
   background: rgba(255, 255, 255, 0.95);
@@ -333,11 +118,10 @@
   flex: 1 1 400px;
 }
 
-.founder-copy h2 {
-  margin: 0 0 20px;
-  font-family: "Playfair Display", serif;
-  font-size: 32px;
-  color: #f7931e;
+.story-text h2 {
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: #ff7a00;
 }
 
 .cta-btn {
