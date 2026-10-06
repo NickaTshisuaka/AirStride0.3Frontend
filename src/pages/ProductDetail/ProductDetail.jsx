@@ -236,7 +236,7 @@ const ProductDetail = () => {
           <h3>You May Also Like</h3>
           <div className="similar-products-grid">
             {similarProducts.map((sp) => (
-              <div key={sp.product_id} className="similar-product-card" onClick={() => navigate(`/product/${sp.product_id}`)}>
+              <div key={sp.product_id} className="similar-product-card" onClick={() => navigate(`/product/${product.product_id}`)}>
                 <img src={sp.imageUrl} alt={sp.name} className="similar-product-image" />
                 <div className="similar-product-info">
                   <h4>{sp.name}</h4>

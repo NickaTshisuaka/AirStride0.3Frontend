@@ -24,10 +24,11 @@
   margin-bottom: 40px;
 }
 
-.footer-brand h2 {
-  font-size: 28px;
+.footer-brand h4 {
+  font-size: 24px;
   color: white;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  margin-left: 50px;
   background: linear-gradient(90deg, #4facfe, #00f2fe);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -36,6 +37,7 @@
 .footer-brand p {
   font-size: 14px;
   color: #ddd;
+  margin-left: 50px;
 }
 
 .footer-links h4,
@@ -46,18 +48,34 @@
   color: orange;
 }
 
+.footer-links h4 {
+  margin-left: 500px;
+}
+
 .footer-links ul {
+  list-style: none;
+  padding: 0;
+  font-size: 15px;
+ margin-left: 500px;
+}
+
+.footer-links li {
+  margin-bottom: 12px;
+  /* margin-right: 0px; */
+}
+
+.footer-social ul {
   list-style: none;
   padding: 0;
 }
 
-.footer-links li {
-  margin-bottom: 8px;
+.footer-social li {
+  margin-bottom: 12px;
 }
 
 .footer-social .social-icons a {
   margin-right: 12px;
-  font-size: 20px;
+  font-size: 15px;
   color: white;
   transition: 0.3s ease;
 }
@@ -67,11 +85,11 @@
   transform: scale(1.2);
 }
 
-.footer-newsletter p {
+.footer-newsletter p { 
   font-size: 14px;
   color: #ccc;
   margin-bottom: 10px;
-}
+} 
 
 .newsletter-form {
   display: flex;

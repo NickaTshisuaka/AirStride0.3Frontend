@@ -4,15 +4,12 @@
 
 .home-page {
   width: 100%;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   background: #f5f8fb;
   color: #09243d;
   font-family: "Poppins", sans-serif;
 }
 
-.home-page * {
-  box-sizing: border-box;
-}
 
 button {
   font-family: inherit;
