@@ -182,7 +182,7 @@ export default function AboutPage() {
 
           <p>
             Everything we create is designed to help you breathe
-            easier, move freely and enjoy every kilometre.
+            easier, move freely and enjoy every kilometre..
           </p>
         </motion.div>
 
