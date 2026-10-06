@@ -1,13 +1,13 @@
 /* src/components/Footer.css */
 .footer {
-  background: linear-gradient(to top, #0d1b2a, #1b2a49);
-  color: white;
+  background-color: #fff;
+  color: black;
   padding: 60px 20px 20px 20px;
   font-family: "Poppins", sans-serif;
 }
 
 .footer a {
-  color: white;
+  color: black;
   text-decoration: none;
   transition: all 0.3s ease;
 }
@@ -26,7 +26,7 @@
 
 .footer-brand h4 {
   font-size: 24px;
-  color: white;
+  color: black;
   margin-bottom: 10px;
   margin-left: 50px;
   background: linear-gradient(90deg, #4facfe, #00f2fe);
@@ -36,7 +36,7 @@
 
 .footer-brand p {
   font-size: 14px;
-  color: #ddd;
+  color: black;
   margin-left: 50px;
 }
 
@@ -76,7 +76,7 @@
 .footer-social .social-icons a {
   margin-right: 12px;
   font-size: 15px;
-  color: white;
+  color: black;
   transition: 0.3s ease;
 }
 
@@ -87,7 +87,7 @@
 
 .footer-newsletter p { 
   font-size: 14px;
-  color: #ccc;
+  color: black;
   margin-bottom: 10px;
 } 
 
@@ -109,7 +109,7 @@
   border: none;
   border-radius: 6px;
   background: orange;
-  color: white;
+  color: black;
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s ease;
@@ -127,7 +127,7 @@
   border-top: 1px solid #333;
   padding-top: 15px;
   font-size: 13px;
-  color: #aaa;
+  color: black;
 }
 
 .footer-bottom .legal-links a {
