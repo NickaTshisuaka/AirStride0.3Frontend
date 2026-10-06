@@ -17,6 +17,7 @@ import { toast, ToastContainer } from "react-toastify";
 import { useTheme } from "../../contexts/ThemeContext";
 import "react-toastify/dist/ReactToastify.css";
 import "./AccountSettings.css";
+import Logout from "../Logout/Logout";
 
 const API_URL =
   import.meta.env.VITE_API_URL || "http://localhost:5000";
@@ -446,6 +447,7 @@ const AccountSettings = () => {
 
           <small>JPG, PNG or WEBP • Max 2MB</small>
         </div>
+        
       </div>
 
       <form onSubmit={saveProfile} className="account-form">
@@ -515,6 +517,9 @@ const AccountSettings = () => {
 
           {loading ? "Saving..." : "Save Changes"}
         </button>
+        <div className="account-settings-logout">
+        <Logout />
+      </div> 
       </form>
     </section>
   );

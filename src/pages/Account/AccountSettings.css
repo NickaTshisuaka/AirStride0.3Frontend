@@ -1,22 +1,4 @@
 
-:root {
-  --account-accent: #ff8a34;
-  --account-blue: #38aef5;
-
-  --account-bg: #f4f7fb;
-  --account-card: #ffffff;
-  --account-text: #101828;
-  --account-muted: #667085;
-  --account-border: #e4e7ec;
-
-  --account-danger: #ef4444;
-  --account-success: #22c55e;
-
-  --account-radius: 18px;
-  --account-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
-}
-
-
 /* =========================================
    PAGE
 ========================================= */

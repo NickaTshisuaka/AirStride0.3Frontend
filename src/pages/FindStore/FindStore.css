@@ -1,377 +1,676 @@
-/* Page */
-.page {
+/* =========================================================
+   AIRSTRIDE FIND STORE
+   All classes are uniquely prefixed with "afs-"
+========================================================= */
+
+.afs-find-store {
+  width: 100%;
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 50%, #93c5fd 100%);
+
+  background: #ffffff;
+  color: #111820;
+
+  font-family: Georgia, 'Times New Roman', serif;
 }
 
-/* Content Wrapper */
-.content-wrapper {
-  max-width: 1200px;
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.afs-hero {
+  position: relative;
+
   width: 100%;
-  margin: 0 auto;
-  padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  flex: 1;
-}
+  height: 230px;
 
-/* Store Info */
-.store-info {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 2rem;
-}
+  /* overflow: hidden; */
 
-.location-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 1rem;
-  margin-bottom: 2rem;
-}
-
-.icon-circle {
-  background: #ff6b35;
-  padding: 0.875rem;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(255, 107, 53, 0.3);
-  flex-shrink: 0;
-}
-
-.icon {
-  color: white;
-  width: 1.75rem;
-  height: 1.75rem;
-}
-
-.location-header h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
-}
-
-.address {
-  color: #6b7280;
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-/* Details */
-.details {
-  display: flex;
-  gap: 2rem;
-  border-top: 2px solid #e5e7eb;
-  padding-top: 1.5rem;
-}
-
-@media (max-width: 768px) {
-  .details {
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-}
-
-.detail-item h3 {
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.detail-item p {
-  color: #6b7280;
-  margin: 0.25rem 0;
-  padding-left: 1.75rem;
-}
-
-.small-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #ff6b35;
-}
-
-/* Info Box */
-.info-box {
-  background: #eff6ff;
-  border: 2px solid #93c5fd;
-  border-radius: 1rem;
-  padding: 1.5rem;
-}
-
-.info-box h3 {
-  font-weight: 600;
-  color: #1e3a8a;
-  margin: 0 0 0.75rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.1rem;
-}
-
-.info-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-.info-box p {
-  color: #1e40af;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin: 0;
-}
-
-/* Directions Section */
-.directions-section {
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-}
-
-.btn-directions {
-  width: 100%;
-  background: #60a5fa;
-  color: white;
-  font-weight: 600;
-  padding: 1rem 1.5rem;
-  border-radius: 0.75rem;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 12px rgba(96, 165, 250, 0.4);
-  font-size: 1.1rem;
+
+  background-image: url('/ryzon-about-us-10_1400x.webp');
+  background-size: cover;
+  background-position: center center;
 }
 
-.btn-directions:hover:not(:disabled) {
-  background: #3b82f6;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(96, 165, 250, 0.5);
-}
 
-.btn-directions:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
+.afs-hero::before {
+  content: '';
 
-.btn-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-}
-
-/* Messages */
-.error-message {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #fee2e2;
-  border: 2px solid #ef4444;
-  border-radius: 0.5rem;
-  text-align: center;
-}
-
-.error-message p {
-  color: #991b1b;
-  font-weight: 500;
-  margin: 0 0 0.75rem 0;
-  padding: 0;
-}
-
-.retry-btn {
-  background: #ef4444;
-  color: white;
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.retry-btn:hover {
-  background: #dc2626;
-}
-
-.success-message {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: #d1fae5;
-  border: 2px solid #10b981;
-  border-radius: 0.5rem;
-  text-align: center;
-  animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.success-message p {
-  color: #065f46;
-  font-weight: 500;
-  margin: 0;
-  padding: 0;
-}
-
-/* Map Section */
-.map-section {
-  position: relative;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  flex: 1;
-  min-height: 500px;
-  display: flex;
-}
-
-.map {
-  width: 100%;
-  height: 80vh;
-  border: 0;
-  border-radius: 1rem;
-}
-
-.map-badge {
   position: absolute;
-  top: 1rem;
-  left: 1rem;
-  background: white;
-  padding: 0.75rem 1.25rem;
-  border-radius: 50px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  inset: 0;
+
+  background-image: inherit;
+  background-size: cover;
+  background-position: center center;
+
+  filter: grayscale(100%);
+
+  transform: scale(1.01);
+}
+
+
+.afs-hero-overlay {
+  position: absolute;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.25);
+
+  z-index: 1;
+}
+
+
+.afs-hero-content {
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 0.5rem;
-  z-index: 10;
+
+  text-align: center;
 }
 
-.badge-icon {
-  width: 1.25rem;
-  height: 1.25rem;
-  color: #ff6b35;
+
+.afs-hero-title {
+  margin: 0;
+
+  color: #f7931e;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: clamp(2.5rem, 6vw, 4rem);
+
+  font-weight: 900;
+
+  line-height: 1;
+
+  letter-spacing: -1px;
+
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
 }
 
-.map-badge span {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1f2937;
+
+/* =========================================================
+   CONTENT WRAPPER
+========================================================= */
+
+.afs-content {
+  width: min(100%, 1000px);
+
+  margin: 0 auto;
+
+  padding: 26px 32px 60px;
+
+  box-sizing: border-box;
 }
-/* Modal Overlay */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
+
+
+/* =========================================================
+   STORY SECTIONS
+========================================================= */
+
+.afs-story {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+
+  align-items: center;
+
+  column-gap: 45px;
+
+  margin-bottom: 40px;
+}
+
+
+.afs-story--first {
+  margin-top: 0;
+}
+
+
+.afs-story--second {
+  margin-top: 8px;
+}
+
+
+/* =========================================================
+   STORY IMAGE
+========================================================= */
+
+.afs-story-media {
+  width: 100%;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+
+  line-height: 0;
+}
+
+
+.afs-story-image {
+  display: block;
+
+  width: 100%;
+  height: 195px;
+
+  object-fit: cover;
+
+  transition: transform 0.4s ease;
+}
+
+
+.afs-story-media:hover .afs-story-image {
+  transform: scale(1.025);
+}
+
+
+/* =========================================================
+   STORY TEXT
+========================================================= */
+
+.afs-story-text {
+  width: 100%;
+  max-width: 390px;
+}
+
+
+.afs-story-heading {
+  display: inline-block;
+
+  margin: 0 0 9px;
+
+  padding-bottom: 2px;
+
+  color: #f7931e;
+
+  border-bottom: 2px solid #f7931e;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: 25px;
+
+  font-weight: 700;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.4px;
+}
+
+
+.afs-story-description {
+  margin: 0;
+
+  color: #1d242b;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: 12px;
+
+  line-height: 1.75;
+}
+
+
+/* =========================================================
+   LOCATION
+========================================================= */
+
+.afs-location {
+  margin-top: 68px;
+
+  text-align: center;
+}
+
+
+.afs-location-title {
+  margin: 0 0 9px;
+
+  color: #f7931e;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: clamp(2rem, 4vw, 2.8rem);
+
+  font-weight: 400;
+
+  line-height: 1.2;
+
+  letter-spacing: 1px;
+}
+
+
+/* =========================================================
+   MAP
+========================================================= */
+
+.afs-map-container {
+  position: relative;
+
+  width: min(100%, 600px);
+
+  height: 190px;
+
+  margin: 0 auto;
+
+  overflow: hidden;
+
+  border-radius: 12px;
+
+  background: #eeeeee;
+}
+
+
+.afs-map {
+  display: block;
+
   width: 100%;
   height: 100%;
-  background: rgba(17, 24, 39, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-  animation: fadeIn 0.3s ease;
+
+  border: 0;
 }
 
-/* Modal Box */
-.modal {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  max-width: 400px;
-  width: 90%;
-  text-align: center;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  animation: slideUp 0.35s ease;
-}
 
-.modal h2 {
-  color: #1f2937;
+/* =========================================================
+   MAP DIRECTIONS BUTTON
+========================================================= */
+
+.afs-directions-button {
+  position: absolute;
+
+  top: 8px;
+  right: 8px;
+
+  z-index: 5;
+
+  padding: 8px 13px;
+
+  border: 0;
+
+  background: #f7931e;
+  color: #ffffff;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 9px;
+
   font-weight: 700;
-  margin-bottom: 0.75rem;
+
+  letter-spacing: 0.8px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    opacity 0.2s ease;
 }
 
-.modal p {
-  color: #6b7280;
-  font-size: 0.95rem;
-  margin-bottom: 1.5rem;
+
+.afs-directions-button:hover {
+  background: #333333;
+}
+
+
+.afs-directions-button:disabled {
+  opacity: 0.6;
+
+  cursor: wait;
+}
+
+
+/* =========================================================
+   STORE DETAILS
+========================================================= */
+
+.afs-store-details {
+  margin-top: 15px;
+
+  text-align: center;
+
+  color: #f7931e;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: 11px;
+
   line-height: 1.5;
 }
 
-.modal-buttons {
+
+.afs-store-details p {
+  margin: 2px 0;
+}
+
+
+/* =========================================================
+   LOCATION ERROR
+========================================================= */
+
+.afs-location-error {
+  max-width: 500px;
+
+  margin: 18px auto 0;
+
+  padding: 12px;
+
+  border: 1px solid #f7931e;
+
+  text-align: center;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 12px;
+}
+
+
+.afs-location-error p {
+  margin: 0 0 8px;
+}
+
+
+.afs-retry-button {
+  padding: 7px 13px;
+
+  border: 0;
+
+  background: #f7931e;
+  color: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.afs-modal-backdrop {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
   display: flex;
+
+  align-items: center;
   justify-content: center;
-  gap: 1rem;
+
+  padding: 20px;
+
+  background: rgba(0, 0, 0, 0.65);
+
+  box-sizing: border-box;
 }
 
-.btn-allow {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+
+.afs-location-modal {
+  position: relative;
+
+  width: min(100%, 400px);
+
+  padding: 35px;
+
+  background: #ffffff;
+
+  text-align: center;
+
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+
+  box-sizing: border-box;
 }
 
-.btn-allow:hover {
-  background: #2563eb;
-}
 
-.btn-cancel {
-  background: #e5e7eb;
-  color: #374151;
-  border: none;
-  border-radius: 0.5rem;
-  padding: 0.75rem 1.25rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-cancel:hover {
-  background: #d1d5db;
-}
-
-/* Close Button */
-.close-modal {
+.afs-modal-close {
   position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  background: none;
-  border: none;
+
+  top: 12px;
+  right: 12px;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color: #f7931e;
+
   cursor: pointer;
-  color: #6b7280;
-  transition: all 0.2s;
 }
 
-.close-modal:hover {
-  color: #111827;
+
+.afs-modal-close svg {
+  width: 18px;
+  height: 18px;
 }
 
-/* Animations */
-@keyframes slideUp {
-  from {
-    transform: translateY(40px);
-    opacity: 0;
+
+.afs-modal-title {
+  margin: 0 0 15px;
+
+  font-family: Georgia, 'Times New Roman', serif;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+
+.afs-modal-description {
+  margin: 0 0 25px;
+
+  color: #f7931e;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+
+.afs-modal-actions {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+}
+
+
+.afs-modal-allow,
+.afs-modal-cancel {
+  padding: 10px 20px;
+
+  border: 0;
+
+  font-family: Arial, sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+
+  cursor: pointer;
+}
+
+
+.afs-modal-allow {
+  background: #f7931e;
+  color: #ffffff;
+}
+
+
+.afs-modal-allow:hover {
+  background: #f7931e;
+}
+
+
+.afs-modal-cancel {
+  background: #e8e8e8;
+  color: #f7931e;
+}
+
+
+.afs-modal-cancel:hover {
+  background: #d5d5d5;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 768px) {
+
+  .afs-hero {
+    height: 210px;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+
+
+  .afs-content {
+    padding: 24px;
+  }
+
+
+  .afs-story {
+    column-gap: 25px;
+  }
+
+
+  .afs-story-image {
+    height: 175px;
+  }
+
+
+  .afs-story-heading {
+    font-size: 22px;
+  }
+
+
+  .afs-story-description {
+    font-size: 11px;
+  }
+
+
+  .afs-location {
+    margin-top: 55px;
+  }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .afs-hero {
+    height: 190px;
+  }
+
+
+  .afs-hero-title {
+    font-size: 2.4rem;
+  }
+
+
+  .afs-content {
+    padding: 22px 18px 45px;
+  }
+
+
+  .afs-story {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+
+    margin-bottom: 45px;
+  }
+
+
+  /*
+    Second section becomes:
+    
+    IMAGE
+    TEXT
+    
+    on mobile, matching the first section.
+  */
+  .afs-story--second {
+    flex-direction: column-reverse;
+  }
+
+
+  .afs-story-media {
+    width: 100%;
+  }
+
+
+  .afs-story-image {
+    height: 220px;
+  }
+
+
+  .afs-story-text {
+    max-width: none;
+  }
+
+
+  .afs-story-heading {
+    font-size: 23px;
+  }
+
+
+  .afs-story-description {
+    font-size: 12px;
+
+    line-height: 1.7;
+  }
+
+
+  .afs-location {
+    margin-top: 30px;
+  }
+
+
+  .afs-location-title {
+    margin-bottom: 15px;
+
+    font-size: 2rem;
+  }
+
+
+  .afs-map-container {
+    height: 220px;
+  }
+
+
+  .afs-store-details {
+    font-size: 10px;
+  }
+
+
+  .afs-location-modal {
+    padding: 30px 22px;
   }
 }

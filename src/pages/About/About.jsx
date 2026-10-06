@@ -26,6 +26,7 @@ export default function AboutPage() {
 
   return (
     <main className="about-page">
+
       {/* HERO */}
       <header className="hero" ref={heroRef}>
         <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline>

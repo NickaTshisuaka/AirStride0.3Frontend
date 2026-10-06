@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapPin, Navigation, Clock, Phone, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import './FindStore.css';
 
 const FindStore = () => {
@@ -8,7 +8,7 @@ const FindStore = () => {
   const [isGettingLocation, setIsGettingLocation] = useState(false);
   const [showPermissionModal, setShowPermissionModal] = useState(false);
 
-  const storeAddress = "14 Valda Street, Townsview, Johannesburg";
+  const storeAddress = '14 Valda Street, Townsview, Johannesburg';
 
   const handleGetDirections = () => {
     setUserLocation(null);
@@ -19,7 +19,6 @@ const FindStore = () => {
   const confirmPermission = () => {
     setShowPermissionModal(false);
     setIsGettingLocation(true);
-    console.log('Requesting fresh location permission...');
 
     if (!navigator.geolocation) {
       setLocationError('Geolocation is not supported by your browser.');
@@ -29,32 +28,39 @@ const FindStore = () => {
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        console.log('New location obtained:', position.coords);
         const location = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
+
         setUserLocation(location);
         setIsGettingLocation(false);
 
-        const mapsUrl = `https://www.google.com/maps/dir/?api=1&origin=${location.lat},${location.lng}&destination=${encodeURIComponent(storeAddress)}`;
+        const mapsUrl =
+          `https://www.google.com/maps/dir/?api=1` +
+          `&origin=${location.lat},${location.lng}` +
+          `&destination=${encodeURIComponent(storeAddress)}`;
+
         window.open(mapsUrl, '_blank');
       },
       (error) => {
-        console.error('Location error:', error);
         setIsGettingLocation(false);
+
         switch (error.code) {
           case error.PERMISSION_DENIED:
             setLocationError(
-              'You denied location access. Please click "Get Directions" again or check your browser settings.'
+              'You denied location access. Please check your browser settings.'
             );
             break;
+
           case error.POSITION_UNAVAILABLE:
             setLocationError('Location information unavailable.');
             break;
+
           case error.TIMEOUT:
             setLocationError('Location request timed out. Please try again.');
             break;
+
           default:
             setLocationError('Could not get your location. Please try again.');
         }
@@ -68,121 +74,190 @@ const FindStore = () => {
   };
 
   return (
-    <div className="page">
-      <div className="content-wrapper">
+    <main className="afs-find-store">
 
-        {/* Store Info Section */}
-        <div className="store-info">
-          <div className="location-header">
-            <div className="icon-circle">
-              <MapPin className="icon" />
-            </div>
-            <div>
-              <h1>Our Store Location</h1>
-              <p className="address">{storeAddress}</p>
-            </div>
+      {/* HERO */}
+      <section className="afs-hero">
+        <div className="afs-hero-overlay" />
+
+        <div className="afs-hero-content">
+          <h1 className="afs-hero-title">
+            FIND A STORE
+          </h1>
+        </div>
+      </section>
+
+
+      {/* MAIN CONTENT */}
+      <div className="afs-content">
+
+
+        {/* WHO WE ARE */}
+        <section className="afs-story afs-story--first">
+
+          <div className="afs-story-media">
+            <img
+              src="/Ryzon_AW25_Lookbook_L1223032_lukaspiel_1_7ed0c316-dee3-492e-938b-397516960bb0.webp"
+              alt="AirStride activewear"
+              className="afs-story-image"
+            />
           </div>
 
-          <div className="details">
-            <div className="detail-item">
-              <h3>
-                <Clock className="small-icon" />
-                Store Hours
-              </h3>
-              <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
-              <p>Saturday: 9:00 AM - 4:00 PM</p>
-              <p>Sunday: Closed</p>
-            </div>
+          <div className="afs-story-text">
+            <h2 className="afs-story-heading">
+              WHO WE ARE
+            </h2>
 
-            <div className="detail-item">
-              <h3>
-                <Phone className="small-icon" />
-                Contact
-              </h3>
-              <p>Phone: (011) 123-4567</p>
-              <p>Email: townsview@store.com</p>
-            </div>
+            <p className="afs-story-description">
+              AirStride began with a simple truth: running is freedom,
+              but only if your body moves in harmony with your breath.
+              We watched countless joggers struggle with endurance not
+              because of strength — but because of breathing.
+            </p>
           </div>
-        </div>
 
-        {/* Info Box */}
-        <div className="info-box">
-          <h3>
-            <Navigation className="info-icon" />
-            How Directions Work
-          </h3>
-          <p>
-            When you click "Directions" from the block on the top left corner of the map, 
-          Google Maps will open in a new tab . You will then need to insert your starting location manually.
-            You can then choose your preferred mode of transport (driving, cycling, or walking) directly on Google Maps and you will then be directed to our store.
-          </p>
-        </div>
+        </section>
 
-        {/* Get Directions Section */}
-        {/* <div className="directions-section">
-          <button 
-            onClick={handleGetDirections} 
-            className="btn-directions"
-            disabled={isGettingLocation}
-          >
-            <Navigation className="btn-icon" />
-            {isGettingLocation ? 'Getting your location...' : 'Get Directions'}
-          </button>
+
+        {/* WHY WE DO IT */}
+        <section className="afs-story afs-story--second">
+
+          <div className="afs-story-text">
+            <h2 className="afs-story-heading">
+              WHY WE DO IT
+            </h2>
+
+            <p className="afs-story-description">
+              AirStride began with a simple truth: running is freedom,
+              but only if your body moves in harmony with your breath.
+              We watched countless joggers struggle with endurance not
+              because of strength — but because of breathing.
+            </p>
+          </div>
+
+          <div className="afs-story-media">
+            <img
+              src="/90.webp"
+              alt="Runners in Johannesburg"
+              className="afs-story-image"
+            />
+          </div>
+
+        </section>
+
+
+        {/* LOCATION */}
+        <section className="afs-location">
+
+          <h2 className="afs-location-title">
+            LOCATION US
+          </h2>
+
+          <div className="afs-map-container">
+
+            <iframe
+              className="afs-map"
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(
+                storeAddress
+              )}&zoom=15&maptype=roadmap`}
+              title="AirStride Store Location"
+            />
+
+            <button
+              className="afs-directions-button"
+              onClick={handleGetDirections}
+              disabled={isGettingLocation}
+            >
+              {isGettingLocation ? 'LOCATING...' : 'DIRECTIONS'}
+            </button>
+
+          </div>
+
+
+          <div className="afs-store-details">
+            <p>{storeAddress}</p>
+
+            <p>
+              Monday – Friday · 9:00 AM – 6:00 PM
+            </p>
+
+            <p>
+              Saturday · 9:00 AM – 4:00 PM
+            </p>
+          </div>
+
 
           {locationError && (
-            <div className="error-message">
+            <div className="afs-location-error">
+
               <p>{locationError}</p>
-              <button onClick={handleGetDirections} className="retry-btn">
-                Try Again
+
+              <button
+                className="afs-retry-button"
+                onClick={handleGetDirections}
+              >
+                TRY AGAIN
               </button>
+
             </div>
           )}
 
-          {userLocation && !locationError && (
-            <div className="success-message">
-              <p>✓ User's location successfully retrieved!</p>
-            </div>
-          )}
-        </div> */}
+        </section>
 
-        {/* Map Section */}
-        <div className="map-section">
-          <iframe
-            className="map"
-            loading="lazy"
-            allowFullScreen
-            referrerPolicy="no-referrer-when-downgrade"
-            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${encodeURIComponent(storeAddress)}&zoom=15&maptype=roadmap`}
-            title="Store Location Map"
-          />
-          
-          <div className="map-badge">
-            <MapPin className="badge-icon" />
-            <span>Our Store</span>
-          </div>
-        </div>
       </div>
 
-      {/* Custom Permission Modal */}
+
+      {/* LOCATION PERMISSION MODAL */}
       {showPermissionModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <button className="close-modal" onClick={() => setShowPermissionModal(false)}>
+        <div className="afs-modal-backdrop">
+
+          <div className="afs-location-modal">
+
+            <button
+              className="afs-modal-close"
+              onClick={() => setShowPermissionModal(false)}
+              aria-label="Close"
+            >
               <X />
             </button>
-            <h2>Allow Location Access?</h2>
-            <p>
-              We’ll use your current location to show directions to our store in Google Maps.
-              Your location data won’t be stored or shared.
+
+            <h2 className="afs-modal-title">
+              ALLOW LOCATION ACCESS?
+            </h2>
+
+            <p className="afs-modal-description">
+              We'll use your current location to show directions
+              to our store in Google Maps. Your location data
+              won't be stored or shared.
             </p>
-            <div className="modal-buttons">
-              <button className="btn-allow" onClick={confirmPermission}>Allow</button>
-              <button className="btn-cancel" onClick={() => setShowPermissionModal(false)}>Cancel</button>
+
+            <div className="afs-modal-actions">
+
+              <button
+                className="afs-modal-allow"
+                onClick={confirmPermission}
+              >
+                ALLOW
+              </button>
+
+              <button
+                className="afs-modal-cancel"
+                onClick={() => setShowPermissionModal(false)}
+              >
+                CANCEL
+              </button>
+
             </div>
+
           </div>
+
         </div>
       )}
-    </div>
+
+    </main>
   );
 };
 

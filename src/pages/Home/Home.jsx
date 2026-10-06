@@ -9,8 +9,8 @@ export default function Home() {
   const parallaxRefs = useRef([]);
 
   const videos = [
-    "/videos/vid1.mp4",
-    "/videos/vid2.mp4",
+    "/videos/FEEL Embrace.mp4",
+    "/videos/The meaning of Home.mp4",
     "/videos/vid3.mp4",
     "/videos/vid4.mp4",
   ];
