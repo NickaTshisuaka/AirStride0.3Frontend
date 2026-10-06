@@ -88,7 +88,116 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* TEAM SECTION */}
+
+      {/* WHO WE ARE */}
+      <section className="about-story">
+
+        <motion.div
+          className="story-image"
+          {...fadeUp}
+        >
+          <img
+            src="/selfieGirls.jpeg"
+            alt="AirStride runners"
+          />
+        </motion.div>
+
+        <motion.div
+          className="story-copy"
+          {...fadeUp}
+        >
+          <h2>WHO WE ARE</h2>
+
+          <p>
+            AirStride began with a simple truth: running is freedom,
+            but only if your body moves in harmony with your breath.
+            We watched countless joggers struggle with endurance not
+            because of strength — but because of breathing.
+          </p>
+
+          <p>
+            That observation became the foundation of AirStride.
+            We create products designed around natural movement,
+            comfort and the rhythm of the human body.
+          </p>
+        </motion.div>
+
+      </section>
+
+
+      {/* WHY WE DO IT */}
+      <section className="why-section">
+
+        <motion.div
+          className="why-copy"
+          {...fadeUp}
+          
+        >
+          <h2>WHY WE DO IT</h2>
+
+          <p>
+            AirStride exists because movement should feel natural.
+            We believe running should not feel like a battle against
+            your clothing, your equipment or your own body.
+          </p>
+
+          <p>
+            Everything we create is designed to help you breathe
+            easier, move freely and enjoy every kilometre..
+          </p>
+        </motion.div>
+
+      </section>
+
+
+      {/* LARGE IMAGE */}
+      <motion.section
+        className="wide-image-section"
+        {...fadeUp}
+      >
+        <img
+          src="/Soccer.jpeg"
+          alt="AirStride community"
+          onError={(e) => {
+            e.currentTarget.src = "/Soccer.jpeg";
+          }}
+        />
+      </motion.section>
+
+
+      {/* QUOTE */}
+      <section className="quote-section">
+
+        <button
+          className="quote-arrow"
+          onClick={previousTestimonial}
+          aria-label="Previous"
+        >
+          <FaArrowLeft />
+        </button>
+
+        <motion.blockquote
+          key={testimonial}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          “Every product we make exists for one purpose:
+          helping you breathe easier, run further, and feel more alive.”
+        </motion.blockquote>
+
+        <button
+          className="quote-arrow"
+          onClick={nextTestimonial}
+          aria-label="Next"
+        >
+          <FaArrowRight />
+        </button>
+
+      </section>
+
+
+      {/* TEAM */}
       <section className="team-section">
         <h2 className="section-title">Meet the Team</h2>
         <div className="team-grid">
