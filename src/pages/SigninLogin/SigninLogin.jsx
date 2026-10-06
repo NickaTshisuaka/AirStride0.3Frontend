@@ -260,10 +260,9 @@ const SigninLogin = () => {
       <div className="auth-container gradient-bg">
         <div className='sports-video'>
    <video 
-  src={`${window.location.origin}/videos/nike-innovations.mp4`} 
+  src={`${window.location.origin}/videos/vid2.mp4`} 
   autoPlay 
   loop 
-  controls 
   mute
   // width="150%" 
   // height="100%"
