@@ -52,7 +52,7 @@
 
 .about-hero-content h1 {
   margin: 0;
-  color: #fff;
+  color: #f7931e;
   font-family: "Playfair Display", serif;
   font-size: clamp(3rem, 7vw, 5.5rem);
   font-weight: 700;
@@ -76,6 +76,7 @@
   font-family: "Playfair Display", serif;
   font-size: 27px;
   font-weight: 600;
+  color: #f7931e;
 }
 
 .care-line {
@@ -161,6 +162,7 @@
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 6px;
+  color: #f7931e;
 }
 
 .story-copy p,
@@ -261,6 +263,7 @@
   font-family: "Playfair Display", serif;
   font-size: 28px;
   font-weight: 600;
+  color: #f7931e;
 }
 
 .team-strip {
@@ -426,6 +429,7 @@
   margin: 0 0 20px;
   font-family: "Playfair Display", serif;
   font-size: 32px;
+  color: #f7931e;
 }
 
 .founder-copy > p:not(.small-label) {

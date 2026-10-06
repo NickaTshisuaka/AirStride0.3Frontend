@@ -24,7 +24,7 @@
   width: 100%;
   height: 230px;
 
-  overflow: hidden;
+  /* overflow: hidden; */
 
   display: flex;
   align-items: center;
@@ -80,7 +80,7 @@
 .afs-hero-title {
   margin: 0;
 
-  color: #ffffff;
+  color: #f7931e;
 
   font-family: Georgia, 'Times New Roman', serif;
 
@@ -187,9 +187,9 @@
 
   padding-bottom: 2px;
 
-  color: #111820;
+  color: #f7931e;
 
-  border-bottom: 2px solid #111820;
+  border-bottom: 2px solid #f7931e;
 
   font-family: Georgia, 'Times New Roman', serif;
 
@@ -230,7 +230,7 @@
 .afs-location-title {
   margin: 0 0 9px;
 
-  color: #111820;
+  color: #f7931e;
 
   font-family: Georgia, 'Times New Roman', serif;
 
@@ -291,7 +291,7 @@
 
   border: 0;
 
-  background: #111820;
+  background: #f7931e;
   color: #ffffff;
 
   font-family: Arial, sans-serif;
@@ -331,7 +331,7 @@
 
   text-align: center;
 
-  color: #444444;
+  color: #f7931e;
 
   font-family: Georgia, 'Times New Roman', serif;
 
@@ -357,7 +357,7 @@
 
   padding: 12px;
 
-  border: 1px solid #222222;
+  border: 1px solid #f7931e;
 
   text-align: center;
 
@@ -377,7 +377,7 @@
 
   border: 0;
 
-  background: #111820;
+  background: #f7931e;
   color: #ffffff;
 
   font-size: 10px;
@@ -448,7 +448,7 @@
 
   background: transparent;
 
-  color: #222222;
+  color: #f7931e;
 
   cursor: pointer;
 }
@@ -474,7 +474,7 @@
 .afs-modal-description {
   margin: 0 0 25px;
 
-  color: #444444;
+  color: #f7931e;
 
   font-family: Arial, sans-serif;
 
@@ -513,19 +513,19 @@
 
 
 .afs-modal-allow {
-  background: #111820;
+  background: #f7931e;
   color: #ffffff;
 }
 
 
 .afs-modal-allow:hover {
-  background: #333333;
+  background: #f7931e;
 }
 
 
 .afs-modal-cancel {
   background: #e8e8e8;
-  color: #111820;
+  color: #f7931e;
 }
 
 
