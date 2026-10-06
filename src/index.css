@@ -17,3 +17,33 @@
   --card: #1e1e1e;
   --accent: #f7931e;
 }
+
+:root {
+  --faq-bg: #f6f8fb;
+  --faq-surface: #ffffff;
+  --faq-surface-soft: #f1f4f8;
+  --faq-text: #142033;
+  --faq-muted: #687386;
+  --faq-border: #e4e8ee;
+  --faq-orange: #f7931e;
+  --faq-orange-dark: #df7410;
+  --faq-blue: #1f3d82;
+  --faq-shadow: 0 15px 45px rgba(24, 38, 61, 0.08);
+  --faq-radius: 20px;
+
+  --account-accent: #ff8a34;
+  --account-blue: #38aef5;
+
+  --account-bg: #f4f7fb;
+  --account-card: #ffffff;
+  --account-text: #101828;
+  --account-muted: #667085;
+  --account-border: #e4e7ec;
+
+  --account-danger: #ef4444;
+  --account-success: #22c55e;
+
+  --account-radius: 18px;
+  --account-shadow: 0 12px 40px rgba(15, 23, 42, 0.08);
+}
+
