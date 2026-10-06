@@ -277,6 +277,7 @@
   height: 170px;
   overflow: hidden;
   cursor: pointer;
+  border-radius: 2px;
 }
 
 .team-image img {
