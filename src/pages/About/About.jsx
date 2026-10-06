@@ -2,16 +2,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import {
-  FaLeaf,
-  FaRecycle,
-  FaBoxOpen,
-  FaArrowLeft,
-  FaArrowRight,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedin
-} from "react-icons/fa";
+import { FaLightbulb, FaHeartbeat, FaRunning, FaUsers, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { SlPresent } from "react-icons/sl";
+import { TbTruckReturn } from "react-icons/tb";
+import { AiOutlineSafety } from "react-icons/ai";
 import "./About.css";
 
 const fadeUp = {
@@ -76,55 +70,80 @@ export default function AboutPage() {
   return (
     <main className="about-page">
       {/* HERO */}
-      <section className="about-hero" ref={heroRef}>
-        <video
-          ref={videoRef}
-          className="about-hero-video"
-          autoPlay
-          muted
-          loop
-          playsInline
-        >
+      <header className="hero" ref={heroRef}>
+        {/* <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline>
           <source src="/bokke.mp4" type="video/mp4" />
-        </video>
-
-        <div className="about-hero-overlay" />
-
-        <motion.div
-          className="about-hero-content"
-          {...fadeUp}
-        >
+        </video> */}
+        <img className="hero-image" src="https://img.magnific.com/premium-photo/group-portrait-smile-workout-gym-training-exercise-class-healthcare-bonding-wellness-people-diversity-motivation-sports-teamwork-support-collaboration_590464-457952.jpg?semt=ais_hybrid&w=740&q=80" alt="AirStride hero" />
+        <div className="hero-overlay" />
+        <motion.div {...fadeUp} className="hero-inner" viewport={{ once: true }}>
           <h1>ABOUT US</h1>
+          {/* <p className="subtitle">Helping joggers breathe better, run further, and live healthier.</p> */}
+          {/* <button className="hero-cta" onClick={() => navigate("/products")}>Explore Products</button> */}
         </motion.div>
+      </header>
+
+      <section  className="intro-section">
+        <p className="section-title">WE CARE</p>
+        <hr className="section-divider" />
+        <ul>
+          <li><span><SlPresent size={40} /></span>Environmental friendly</li>
+          <li><span><TbTruckReturn size={40} /></span>Free returns</li>
+          <li><span><AiOutlineSafety size={40} /></span>Safe and reliable</li>
+        </ul>
+
       </section>
 
+      {/* STORY */}
+      <section className="story-section">
+        <motion.div className="story-media" {...fadeIn} viewport={{ once: true }}>
+          <img src="/selfieGirls.jpeg" alt="AirStride story" />
+        </motion.div>
+        <motion.article className="story-text" {...fadeUp} viewport={{ once: true }}>
+          <h2>WHO WE ARE</h2>
+          <p>
+            AirStride began with a simple truth: running is freedom, but only if your body moves in harmony with your breath.
+            We watched countless joggers struggle with endurance not because of strength — but because of breathing. That inspired
+            us to design tools that help people reconnect with their rhythm and unlock the joy of effortless movement.
+          </p>
+          <p>
+            Today, AirStride continues that mission by blending research, innovation, and heart. Every product we make exists
+            for one purpose: helping you breathe easier, run further, and feel more alive.
+          </p>
+          {/* <button className="cta-btn" onClick={() => navigate("/products")}>Explore Products</button> */}
+        </motion.article>
+      </section>
 
-      {/* WE ARE CARE */}
-      <section className="care-section">
-        <motion.h2 {...fadeUp}>WE ARE CARE</motion.h2>
-
-        <div className="care-line" />
-
-        <div className="care-grid">
-
-          <div className="care-item">
-            <FaLeaf />
-            <span>ENVIRONMENTALLY FRIENDLY</span>
-          </div>
-
-          <div className="care-item">
-            <FaRecycle />
-            <span>NON-TOXIC MATERIALS</span>
-          </div>
-
-          <div className="care-item">
-            <FaBoxOpen />
-            <span>15 DAYS RETURNS</span>
-          </div>
-
-        </div>
-
-        <div className="care-line bottom-line" />
+      {/* VALUES */}
+      <section className="values-section">
+        <h2 className="section-title">WHY WE DO IT</h2>
+       
+        {/* <div className="values-grid">
+          <motion.div {...fadeUp} className="value-card" viewport={{ once: true }}>
+            <FaLightbulb className="value-icon" />
+            <h4>Innovation</h4>
+            <p>Pushing boundaries with research-driven design.</p>
+          </motion.div>
+          <motion.div {...fadeUp} className="value-card" transition={{ delay: 0.15 }} viewport={{ once: true }}>
+            <FaHeartbeat className="value-icon" />
+            <h4>Health</h4>
+            <p>Prioritizing long-term breathing efficiency and wellbeing.</p>
+          </motion.div>
+          <motion.div {...fadeUp} className="value-card" transition={{ delay: 0.3 }} viewport={{ once: true }}>
+            <FaRunning className="value-icon" />
+            <h4>Performance</h4>
+            <p>Empowering runners to go further with confidence.</p>
+          </motion.div>
+          <motion.div {...fadeUp} className="value-card" transition={{ delay: 0.45 }} viewport={{ once: true }}>
+            <FaUsers className="value-icon" />
+            <h4>Community</h4>
+            <p>Supporting every runner — beginners to pros.</p>
+          </motion.div>
+        </div> */}
+        <img className="team-image" src="https://photos.peopleimages.com/picture/202303/2676591-low-angle-fitness-or-rugby-team-in-huddle-with-support-or-solidarity-for-competition-training-game.-men-group-happy-smile-or-athletes-in-sports-match-or-exercise-together-with-pride-or-mission-fit_400_400.jpg" alt="Our Team" />
+         <p className="section-description">
+          AirStride began with a simple truth: running is freedom, but only if your body moves in harmony with your breath. We watched countless joggers struggle with endurance not because of strength — but because of breathing.
+        </p>
       </section>
 
 
@@ -268,7 +287,6 @@ export default function AboutPage() {
               <p>Lead Developer</p>
             </div>
           </div>
-
           <div className="team-image">
             <img src="/tracy.jpeg" alt="Tracy Bebel" />
             <div className="team-overlay">

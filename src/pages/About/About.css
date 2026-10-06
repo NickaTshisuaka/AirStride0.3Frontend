@@ -19,19 +19,19 @@
 
 .about-hero {
   position: relative;
-  height: 430px;
+  height: 80vh;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.about-hero-video {
-  position: absolute;
-  width: 100%;
-  height: 115%;
-  top: -7%;
+.hero-image {
+  position:absolute;
+  top: 0;
   left: 0;
+  width: 100%;
+  height: 220%;
   object-fit: cover;
   filter: grayscale(100%);
   transform: scale(1.05);
@@ -97,18 +97,12 @@
   gap: 85px;
 }
 
-.care-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  min-width: 90px;
-}
 
-.care-item svg {
-  width: 39px;
-  height: 39px;
-  color: #000;
+.hero-inner h1 {
+  font-size: 4rem;
+  background: linear-gradient(to right, #ff7a00, #ff9f4d);
+  -webkit-background-clip: text;
+  color: white;
 }
 
 .care-item span {
@@ -171,6 +165,39 @@
   line-height: 1.8;
 }
 
+.intro-section ul{
+  margin-top: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+}
+.intro-section li {
+  display: flex;
+  flex-direction:column;
+  align-items: center;
+  gap: 10px;
+  padding: 60px 5%;
+  flex-wrap: wrap;
+  margin-top:0px;
+}
+
+.section-title {
+  text-align: center;
+  margin-top: 20px;
+  padding-bottom: 1px;
+  font-size: 5.4rem;
+  font-weight: 600;
+}
+
+.section-divider {
+  width: 300px;
+  height: 4px;
+  background: #0047ab;
+  margin: 1px auto;
+}
 
 /* =========================================
    WHY WE DO IT
@@ -201,7 +228,8 @@
   overflow: hidden;
 }
 
-.wide-image-section img {
+.story-media img {
+  padding-top: 0px;
   width: 100%;
   height: 100%;
   display: block;
@@ -255,12 +283,17 @@
   padding: 10px 8% 60px;
 }
 
-.team-section > h2 {
-  margin: 0 0 30px;
-  text-align: center;
-  font-family: "Playfair Display", serif;
-  font-size: 28px;
-  font-weight: 600;
+.story-text h2 {
+  padding-top: 25px;
+  font-size: 2.4rem;
+  margin-bottom: 20px;
+  color: 0047ab;
+}
+
+.story-text p {
+  padding-top: 20px;
+  line-height: 1.4;
+  margin-bottom: 20px;
 }
 
 .team-strip {
@@ -335,19 +368,51 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.unified-card:hover {
+  transform: translateY(-5px);
+}
+
+/* VALUES */
+.values-section {
+  padding: 80px 5%;
+  /* text-align: center; */
+}
+
+.section-title {
+  font-size: 2.4rem;
+  margin-bottom: 40px;
   text-align: center;
+  /* background: linear-gradient(to right, #0047ab, #3fa9f5); */
+  /* -webkit-background-clip: text; */
+  color: 0047ab;
 }
 
-.testimonial-label {
-  margin: 0 0 18px;
-  font-size: 8px;
-  font-weight: 600;
-  letter-spacing: 2px;
+.team-image{
+   padding-top: 0px;
+  width: 50%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 20px;
+  transition: transform 0.5s ease;
 }
 
-.testimonial-content {
-  max-width: 550px;
+.section-description {
+  width: 50%;
+  margin: 0 auto;
+  text-align: right;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #333;
+}
+/* 
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
 }
 
 .testimonial-quote {
@@ -357,11 +422,24 @@
   line-height: 1.45;
 }
 
-.testimonial-content span {
-  display: block;
-  margin-top: 14px;
-  font-size: 7px;
-  letter-spacing: 1px;
+.value-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+}
+
+.value-icon {
+  font-size: 2.2rem;
+  margin-bottom: 12px;
+  color: #ff7a00;
+} */
+
+.section-description{
+  width:50%;
+}
+
+/* FEATURES */
+.potential-section {
+  padding: 80px 5%;
 }
 
 .testimonial-dots {
