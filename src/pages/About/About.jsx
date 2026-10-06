@@ -348,7 +348,7 @@ export default function AboutPage() {
       </section>
 
 
-      {/* MODAL */}
+      {/* MODALs */}
       {ceoModal && (
         <div
           className="ceo-modal"
