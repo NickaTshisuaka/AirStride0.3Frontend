@@ -274,11 +274,11 @@ button {
 }
 
 .parallax-one {
-  background-image: url("https://i.pinimg.com/736x/26/5f/95/265f959ffba1d31ff5ebe40bdeaae075.jpg");
+  background-image: url("/banner.avif");
 }
 
 .parallax-two {
-  background-image: url("https://i.pinimg.com/1200x/1f/f2/4a/1ff24a1b64e2f0e92e2b644b6b9ab6a6.jpg");
+  background-image: url("/L1000662_web_lukaspiel_1_1.webp");
 }
 
 .parallax-overlay {

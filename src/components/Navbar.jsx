@@ -172,7 +172,7 @@ const Navbar = () => {
           <Link to="/products" className={location.pathname === "/products" ? "active" : ""}>Products</Link>
 
           <Link to="/About" className={location.pathname === "/About" ? "active" : ""}>About Us</Link>
-          <Link to="/contact" className={location.pathname === "/contact" ? "active" : ""}>Contact Us</Link>
+          <Link to="/find-store" className={location.pathname === "/find-store" ? "active" : ""}>Contact Us</Link>
         </nav>
 
           <Link to="/favorites" className={`nav-icon ${favAnimate ? "fav-bounce" : ""}`} title="Favorites">
