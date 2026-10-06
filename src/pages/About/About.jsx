@@ -3,6 +3,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaLightbulb, FaHeartbeat, FaRunning, FaUsers, FaInstagram, FaTwitter, FaLinkedin } from "react-icons/fa";
+import { SlPresent } from "react-icons/sl";
+import { TbTruckReturn } from "react-icons/tb";
+import { AiOutlineSafety } from "react-icons/ai";
 import "./About.css";
 
 const fadeUp = { initial: { opacity: 0, y: 30 }, whileInView: { opacity: 1, y: 0 }, transition: { duration: 0.7 } };
@@ -29,25 +32,36 @@ export default function AboutPage() {
 
       {/* HERO */}
       <header className="hero" ref={heroRef}>
-        <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline>
+        {/* <video ref={videoRef} className="hero-video" autoPlay muted loop playsInline>
           <source src="/bokke.mp4" type="video/mp4" />
-        </video>
+        </video> */}
+        <img className="hero-image" src="https://img.magnific.com/premium-photo/group-portrait-smile-workout-gym-training-exercise-class-healthcare-bonding-wellness-people-diversity-motivation-sports-teamwork-support-collaboration_590464-457952.jpg?semt=ais_hybrid&w=740&q=80" alt="AirStride hero" />
         <div className="hero-overlay" />
         <motion.div {...fadeUp} className="hero-inner" viewport={{ once: true }}>
-          <h1>About AirStride</h1>
-          <p className="subtitle">Helping joggers breathe better, run further, and live healthier.</p>
-          <button className="hero-cta" onClick={() => navigate("/products")}>Explore Products</button>
+          <h1>ABOUT US</h1>
+          {/* <p className="subtitle">Helping joggers breathe better, run further, and live healthier.</p> */}
+          {/* <button className="hero-cta" onClick={() => navigate("/products")}>Explore Products</button> */}
         </motion.div>
       </header>
+
+      <section  className="intro-section">
+        <p className="section-title">WE CARE</p>
+        <hr className="section-divider" />
+        <ul>
+          <li><span><SlPresent size={40} /></span>Environmental friendly</li>
+          <li><span><TbTruckReturn size={40} /></span>Free returns</li>
+          <li><span><AiOutlineSafety size={40} /></span>Safe and reliable</li>
+        </ul>
+
+      </section>
 
       {/* STORY */}
       <section className="story-section">
         <motion.div className="story-media" {...fadeIn} viewport={{ once: true }}>
           <img src="/selfieGirls.jpeg" alt="AirStride story" />
         </motion.div>
-
         <motion.article className="story-text" {...fadeUp} viewport={{ once: true }}>
-          <h2>Our Story</h2>
+          <h2>WHO WE ARE</h2>
           <p>
             AirStride began with a simple truth: running is freedom, but only if your body moves in harmony with your breath.
             We watched countless joggers struggle with endurance not because of strength — but because of breathing. That inspired
@@ -57,14 +71,15 @@ export default function AboutPage() {
             Today, AirStride continues that mission by blending research, innovation, and heart. Every product we make exists
             for one purpose: helping you breathe easier, run further, and feel more alive.
           </p>
-          <button className="cta-btn" onClick={() => navigate("/products")}>Explore Products</button>
+          {/* <button className="cta-btn" onClick={() => navigate("/products")}>Explore Products</button> */}
         </motion.article>
       </section>
 
       {/* VALUES */}
       <section className="values-section">
-        <h2 className="section-title">Our Values</h2>
-        <div className="values-grid">
+        <h2 className="section-title">WHY WE DO IT</h2>
+       
+        {/* <div className="values-grid">
           <motion.div {...fadeUp} className="value-card" viewport={{ once: true }}>
             <FaLightbulb className="value-icon" />
             <h4>Innovation</h4>
@@ -85,7 +100,11 @@ export default function AboutPage() {
             <h4>Community</h4>
             <p>Supporting every runner — beginners to pros.</p>
           </motion.div>
-        </div>
+        </div> */}
+        <img className="team-image" src="https://photos.peopleimages.com/picture/202303/2676591-low-angle-fitness-or-rugby-team-in-huddle-with-support-or-solidarity-for-competition-training-game.-men-group-happy-smile-or-athletes-in-sports-match-or-exercise-together-with-pride-or-mission-fit_400_400.jpg" alt="Our Team" />
+         <p className="section-description">
+          AirStride began with a simple truth: running is freedom, but only if your body moves in harmony with your breath. We watched countless joggers struggle with endurance not because of strength — but because of breathing.
+        </p>
       </section>
 
       {/* TEAM SECTION */}
