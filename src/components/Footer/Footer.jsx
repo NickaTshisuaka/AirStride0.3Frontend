@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaInstagram, FaTwitter, FaYoutube, FaLinkedin } from "react-icons/fa";
 import "./Footer.css";
+import 'iconify-icon';
 
 export default function Footer() {
   const [email, setEmail] = useState("");
@@ -127,32 +128,34 @@ export default function Footer() {
       {/* Footer Top */}
       <div className="footer-top">
         <div className="footer-brand">
-          <h2>AirStride</h2>
-          <p>Breathe better. Run further.</p>
+          {/* <iconify-icon icon="carbon:running"></iconify-icon> */}
+          <h4>AirStride</h4>
+          <p>The ultimate destination for premium sneakers and <br></br>independent maker creations. Engineered for <br></br>comfort, styled for the street</p>
         </div>
 
         <div className="footer-links">
-          <h4>Quick Links</h4>
+          <h4>Shop</h4>
           <ul>
-            <li><a href="/">Home</a></li>
-            <li><a href="/products">Products</a></li>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/products">New Arrivals</a></li>
+            <li><a href="/best-sellers">Best Sellers</a></li>
+            <li><a href="/dates">Release Dates</a></li>
+            {/* <li><a href="/contact">Contact</a></li>
+            <li><a href="/faq">FAQ</a></li> */}
           </ul>
         </div>
 
         <div className="footer-social">
-          <h4>Follow Us</h4>
+          <h4>Support</h4>
           <div className="social-icons">
-            <a href="https://instagram.com" target="_blank" rel="noreferrer"><FaInstagram /></a>
-            <a href="https://twitter.com" target="_blank" rel="noreferrer"><FaTwitter /></a>
-            <a href="https://youtube.com" target="_blank" rel="noreferrer"><FaYoutube /></a>
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer"><FaLinkedin /></a>
+            <ul>
+              <li><a href="https://instagram.com" target="_blank">Order Tracking</a></li>
+              <li><a href="https://twitter.com" target="_blank">Returns & Exchanges</a></li>
+              <li><a href="https://youtube.com" target="_blank">Contact Support</a></li>
+            </ul>
           </div>
         </div>
 
-        <div className="footer-newsletter">
+        {/* <div className="footer-newsletter">
           <h4>Subscribe</h4>
           <p>Get updates and exclusive offers</p>
           <div className="newsletter-form">
@@ -167,12 +170,12 @@ export default function Footer() {
             />
             <button type="button" onClick={handleSubscribe}>Subscribe</button>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Footer Bottom */}
       <div className="footer-bottom">
-        <p>&copy; {new Date().getFullYear()} AirStride. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} AirStride. All rights reserved.Designed with sharp eith aesthetics.</p>
         <div className="legal-links">
           <span className="legal-link-text" onClick={() => openModal("terms")}>Terms of Service</span>
           <span className="legal-link-text" onClick={() => openModal("privacy")}>Privacy Policy</span>
